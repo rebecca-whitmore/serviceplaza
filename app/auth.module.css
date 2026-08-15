@@ -1,0 +1,110 @@
+.main {
+  display: grid;
+  min-height: 100svh;
+  padding: 2rem;
+  place-items: center;
+}
+
+.card {
+  width: min(100%, 34rem);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid #d8dcd9;
+  border-radius: 1.25rem;
+  background: #fff;
+  box-shadow: 0 1.25rem 4rem rgb(25 32 28 / 8%);
+}
+
+.backLink,
+.textLink {
+  color: #334139;
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 2.5rem;
+  text-decoration: none;
+}
+
+.eyebrow {
+  margin-bottom: 0.75rem;
+  color: #626b66;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(2rem, 7vw, 3rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.intro,
+.note {
+  color: #454e49;
+  line-height: 1.65;
+}
+
+.note {
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.form label {
+  font-weight: 700;
+}
+
+.form input {
+  min-height: 3.25rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #9da7a1;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #19201c;
+  font: inherit;
+}
+
+.form input:focus-visible {
+  outline: 3px solid #a9c9b6;
+  outline-offset: 2px;
+}
+
+.form button,
+.secondaryButton {
+  min-height: 3.25rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #24372c;
+  border-radius: 0.6rem;
+  background: #24372c;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #24372c;
+}
+
+.error {
+  margin: 0;
+  color: #9a2f2f;
+  font-size: 0.92rem;
+}
