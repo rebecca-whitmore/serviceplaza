@@ -15,10 +15,21 @@
 }
 
 .backLink,
-.textLink {
+.textLink,
+.primaryLink {
   color: #334139;
   font-weight: 700;
   text-underline-offset: 0.2em;
+}
+
+.primaryLink {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  background: #24372c;
+  color: #fff;
+  text-decoration: none;
 }
 
 .backLink {
