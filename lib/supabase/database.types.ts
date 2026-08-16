@@ -635,6 +635,18 @@ export type Database = {
       }
     }
     Functions: {
+      save_listing_taxonomy: {
+        Args: {
+          additional_category_ids: string[]
+          custom_service_names: string[]
+          help_requested: boolean
+          help_text: string
+          primary_category_id: string | null
+          selected_service_tag_ids: string[]
+          target_version_id: string
+        }
+        Returns: undefined
+      }
       start_application: {
         Args: { contact_name: string }
         Returns: {

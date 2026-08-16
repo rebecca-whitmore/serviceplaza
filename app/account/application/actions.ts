@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 
 export type BusinessBasics = { versionId: string; businessName: string; shortSummary: string; fullDescription: string };
 export type SaveResult = { ok: true } | { ok: false; message: string };
+export type ListingTaxonomy = {
+  versionId: string; primaryCategoryId: string | null; additionalCategoryIds: string[];
+  serviceTagIds: string[]; customServices: string[]; categoryHelpRequested: boolean; categoryHelpText: string;
+};
 
 export async function saveBusinessBasics(input: BusinessBasics): Promise<SaveResult> {
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
@@ -20,5 +24,24 @@ export async function saveBusinessBasics(input: BusinessBasics): Promise<SaveRes
   const { data, error } = await supabase.from("listing_versions").update(values)
     .eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save your changes. Please try again." };
+  return { ok: true };
+}
+
+export async function saveListingTaxonomy(input: ListingTaxonomy): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
+  if (input.additionalCategoryIds.length > 2) return { ok: false, message: "Choose no more than two additional categories." };
+  if (input.serviceTagIds.length > 8) return { ok: false, message: "Choose no more than eight service tags." };
+  if (input.customServices.length > 15 || input.customServices.some((service) => service.trim().length > 80)) return { ok: false, message: "Add no more than 15 services, using up to 80 characters for each." };
+  if (input.categoryHelpText.length > 1000) return { ok: false, message: "Your category request is too long." };
+  const supabase = await createClient();
+  const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { error } = await supabase.rpc("save_listing_taxonomy", {
+    target_version_id: input.versionId, primary_category_id: input.primaryCategoryId,
+    additional_category_ids: input.additionalCategoryIds, selected_service_tag_ids: input.serviceTagIds,
+    custom_service_names: input.customServices, help_requested: input.categoryHelpRequested,
+    help_text: input.categoryHelpText,
+  });
+  if (error) return { ok: false, message: "We couldn’t save your category and services. Please try again." };
   return { ok: true };
 }
