@@ -18,6 +18,14 @@ export type HowYouWork = {
   versionId: string; offersOnline: boolean; offersInPerson: boolean;
   servesLocal: boolean; servesUkWide: boolean; baseTownCity: string; ukRegion: string;
 };
+export type StandOutDetails = {
+  versionId: string; displayImagePublicly: boolean; imageAltText: string; hasPlazaPerk: boolean;
+  perkTitle: string; perkDescription: string; perkRedemption: string; perkConditions: string; perkExpiresOn: string;
+};
+export type ImageRegistration = {
+  versionId: string; storagePath: string; filename: string; mimeType: string;
+  byteSize: number; width: number; height: number; displayPublicly: boolean; altText: string;
+};
 
 function isOptionalWebUrl(value: string) {
   if (!value.trim()) return true;
@@ -133,5 +141,35 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
     uk_region: input.servesLocal ? ukRegion || null : null,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
+  return { ok: true };
+}
+
+export async function registerListingImage(input: ImageRegistration): Promise<SaveResult & { oldPath?: string | null }> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.versionId) || input.byteSize < 1 || input.byteSize > 5_242_880 || !["image/jpeg", "image/png", "image/webp"].includes(input.mimeType)) return { ok: false, message: "Choose a JPG, PNG or WebP image no larger than 5MB." };
+  if (input.filename.length > 255 || input.altText.length > 300 || input.width < 1 || input.height < 1) return { ok: false, message: "This image could not be registered." };
+  const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { data, error } = await supabase.rpc("register_listing_image", {
+    target_version_id: input.versionId, storage_path: input.storagePath, filename: input.filename,
+    file_mime_type: input.mimeType, file_byte_size: input.byteSize, image_width: input.width,
+    image_height: input.height, show_publicly: input.displayPublicly, image_alt_text: input.altText,
+  });
+  if (error) return { ok: false, message: "We couldn’t save your image. Please try again." };
+  return { ok: true, oldPath: data };
+}
+
+export async function saveStandOutDetails(input: StandOutDetails, requireComplete = false): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
+  const perkTitle = input.perkTitle.trim(), perkDescription = input.perkDescription.trim(), perkRedemption = input.perkRedemption.trim(), perkConditions = input.perkConditions.trim();
+  if (input.imageAltText.length > 300 || perkTitle.length > 160 || [perkDescription, perkRedemption, perkConditions].some((value) => value.length > 1000)) return { ok: false, message: "One or more fields is too long." };
+  if (input.hasPlazaPerk && requireComplete && (!perkTitle || !perkDescription || !perkRedemption)) return { ok: false, message: "Complete the Plaza Perk title, description and redemption instructions before continuing." };
+  const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  if (requireComplete) { const { data: image } = await supabase.from("listing_images").select("id").eq("listing_version_id", input.versionId).maybeSingle(); if (!image) return { ok: false, message: "Add a logo or profile image before continuing." }; }
+  const perkValues = input.hasPlazaPerk ? { perk_title: perkTitle, perk_description: perkDescription, perk_redemption: perkRedemption, perk_conditions: perkConditions || null, perk_expires_on: input.perkExpiresOn || null } : { perk_title: null, perk_description: null, perk_redemption: null, perk_conditions: null, perk_expires_on: null };
+  const { data, error } = await supabase.from("listing_versions").update({ has_plaza_perk: input.hasPlazaPerk, ...perkValues }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
+  if (error || !data) return { ok: false, message: "We couldn’t save this section. Please try again." };
+  const { error: imageError } = await supabase.from("listing_images").update({ display_publicly: input.displayImagePublicly, alt_text: input.imageAltText.trim() || null }).eq("listing_version_id", input.versionId);
+  if (imageError) return { ok: false, message: "We couldn’t save your image preferences. Please try again." };
   return { ok: true };
 }

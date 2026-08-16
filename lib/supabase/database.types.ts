@@ -635,6 +635,20 @@ export type Database = {
       }
     }
     Functions: {
+      register_listing_image: {
+        Args: {
+          file_byte_size: number
+          file_mime_type: string
+          filename: string
+          image_alt_text: string
+          image_height: number
+          image_width: number
+          show_publicly: boolean
+          storage_path: string
+          target_version_id: string
+        }
+        Returns: string | null
+      }
       save_basic_information: {
         Args: {
           additional_category_ids: string[]
