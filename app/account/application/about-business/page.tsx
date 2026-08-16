@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AboutBusinessForm } from "./about-business-form";
+import { aiListingPrompt } from "@/lib/data/ai-listing-prompt";
 import styles from "../application.module.css";
 
 export default async function AboutBusinessPage() {
@@ -16,6 +17,6 @@ export default async function AboutBusinessPage() {
 
   return <><header className={styles.header}><div><h1>About your business</h1></div></header>
     <p className={styles.intro}>Give prospective customers a clear, welcoming introduction to your business and the value you provide.</p>
-    <AboutBusinessForm versionId={draft.id} initialValues={{ shortSummary: draft.short_summary, fullDescription: draft.full_description }} />
+    <AboutBusinessForm versionId={draft.id} aiPrompt={aiListingPrompt} initialValues={{ shortSummary: draft.short_summary, fullDescription: draft.full_description }} />
   </>;
 }
