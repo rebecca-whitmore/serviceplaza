@@ -28,7 +28,7 @@ export default async function ReviewPage() {
   const primary = assignments?.find((item) => item.is_primary); const additional = assignments?.filter((item) => !item.is_primary).map((item) => categoryName(item.category_id)).filter(Boolean).join(", ");
   const tagNames = selectedTags?.map((selected) => tags?.find((tag) => tag.id === selected.service_tag_id)?.name).filter(Boolean).join(", ");
   const socialLinks = draft.social_links && typeof draft.social_links === "object" && !Array.isArray(draft.social_links) ? Object.entries(draft.social_links).filter((entry): entry is [string, string] => typeof entry[1] === "string" && Boolean(entry[1])) : [];
-  const basicComplete = Boolean(business.contact_name.trim() && draft.business_name.trim() && (primary || (draft.category_help_requested && draft.category_help_text?.trim())) && ((selectedTags?.length ?? 0) || (services?.length ?? 0)));
+  const basicComplete = Boolean(business.contact_name.trim() && draft.business_name.trim() && (primary || (draft.category_help_requested && draft.category_help_text?.trim())));
   const contactComplete = Boolean(draft.public_contact_name?.trim()); const aboutComplete = Boolean(draft.short_summary.trim() && draft.full_description.trim().length >= 100);
   const workComplete = Boolean((draft.offers_online || draft.offers_in_person) && (draft.serves_local || draft.serves_uk_wide) && (!draft.serves_local || (draft.base_town_city?.trim() && draft.uk_region?.trim())));
   const perkComplete = !draft.has_plaza_perk || Boolean(draft.perk_title?.trim() && draft.perk_description?.trim() && draft.perk_redemption?.trim()); const standOutComplete = perkComplete;
