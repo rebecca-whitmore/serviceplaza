@@ -28,5 +28,5 @@ export async function startApplication(formData: FormData) {
   }
 
   revalidatePath("/account");
-  redirect("/account/application");
+  redirect("/account/application/basic-information");
 }

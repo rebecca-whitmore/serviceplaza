@@ -7,6 +7,7 @@ export type ListingTaxonomy = {
   versionId: string; primaryCategoryId: string | null; additionalCategoryIds: string[];
   serviceTagIds: string[]; customServices: string[]; categoryHelpRequested: boolean; categoryHelpText: string;
 };
+export type BasicInformation = ListingTaxonomy & { applicantName: string; businessName: string };
 
 export async function saveBusinessBasics(input: BusinessBasics): Promise<SaveResult> {
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
@@ -43,5 +44,26 @@ export async function saveListingTaxonomy(input: ListingTaxonomy): Promise<SaveR
     help_text: input.categoryHelpText,
   });
   if (error) return { ok: false, message: "We couldn’t save your category and services. Please try again." };
+  return { ok: true };
+}
+
+export async function saveBasicInformation(input: BasicInformation): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
+  if (!input.applicantName.trim() || input.applicantName.trim().length > 120) return { ok: false, message: "Enter your name using no more than 120 characters." };
+  if (!input.businessName.trim() || input.businessName.trim().length > 160) return { ok: false, message: "Enter your business name using no more than 160 characters." };
+  if (!input.categoryHelpRequested && !input.primaryCategoryId) return { ok: false, message: "Choose a primary category or tell us that you can’t find the right one." };
+  if (input.categoryHelpRequested && !input.categoryHelpText.trim()) return { ok: false, message: "Please briefly describe the category or service you need." };
+  if (input.additionalCategoryIds.length > 2 || input.serviceTagIds.length > 8 || input.customServices.length > 15) return { ok: false, message: "One or more selections exceeds the permitted limit." };
+  const supabase = await createClient();
+  const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { error } = await supabase.rpc("save_basic_information", {
+    target_version_id: input.versionId, applicant_name: input.applicantName,
+    listing_business_name: input.businessName, primary_category_id: input.primaryCategoryId,
+    additional_category_ids: input.additionalCategoryIds, selected_service_tag_ids: input.serviceTagIds,
+    custom_service_names: input.customServices, help_requested: input.categoryHelpRequested,
+    help_text: input.categoryHelpText,
+  });
+  if (error) return { ok: false, message: "We couldn’t save your basic information. Please try again." };
   return { ok: true };
 }

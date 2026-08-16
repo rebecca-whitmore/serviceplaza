@@ -66,7 +66,7 @@ export default async function AccountPage({
         </p>
         {activeVersion?.status === "draft" ||
         activeVersion?.status === "changes_requested" ? (
-          <Link className={styles.primaryLink} href="/account/application">
+          <Link className={styles.primaryLink} href="/account/application/basic-information">
             {activeVersion.status === "changes_requested"
               ? "Update requested changes"
               : "Continue application"}
