@@ -80,7 +80,7 @@ export function BasicInformationForm({ versionId, categories, serviceTags, initi
     </div>
 
     {values.primaryCategoryId && !values.categoryHelpRequested ? <>
-      <fieldset className={styles.fieldset}><legend>Additional categories <span>(optional)</span></legend><p className={styles.hint}>Choose up to two only where they are an important part of your work.</p><div className={styles.selectGrid}>
+      <fieldset className={styles.fieldset}><legend>Additional categories <span>(optional)</span></legend><p className={styles.hint}>Only select additional categories for related services provided under this same business and contact details.</p><div className={styles.selectGrid}>
         <label>Additional category 1<select value={values.additionalCategoryIds[0] ?? ""} onChange={(event) => setAdditional(0, event.target.value)}><option value="">None</option>{categoryOptions([values.primaryCategoryId, values.additionalCategoryIds[1]]).map((category) => <option value={category.id} key={category.id}>{category.name}</option>)}</select></label>
         <label>Additional category 2<select value={values.additionalCategoryIds[1] ?? ""} onChange={(event) => setAdditional(1, event.target.value)}><option value="">None</option>{categoryOptions([values.primaryCategoryId, values.additionalCategoryIds[0]]).map((category) => <option value={category.id} key={category.id}>{category.name}</option>)}</select></label>
       </div></fieldset>
