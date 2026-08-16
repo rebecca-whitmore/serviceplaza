@@ -37,7 +37,7 @@ export function BusinessBasicsForm({ versionId, initialValues }: { versionId: st
     <Field id="businessName" label="Business name" count={`${values.businessName.length}/160`}><input id="businessName" autoComplete="organization" maxLength={160} value={values.businessName} onChange={(e) => update("businessName", e.target.value)} placeholder="The name customers know you by" /></Field>
     <Field id="shortSummary" label="Short summary" count={`${values.shortSummary.length}/160`} hint="In one sentence, explain who you help and what you help them with."><textarea id="shortSummary" maxLength={160} rows={3} value={values.shortSummary} onChange={(e) => update("shortSummary", e.target.value)} /></Field>
     <Field id="fullDescription" label="Full business description" count={`${values.fullDescription.length}/2,000`} hint="Tell visitors who you help, how you work and what makes your service a good fit. At least 100 characters will be required before submission."><textarea id="fullDescription" maxLength={2000} rows={10} value={values.fullDescription} onChange={(e) => update("fullDescription", e.target.value)} /></Field>
-    <div className={styles.saveBar}><p aria-live="polite" className={hasError ? styles.error : ""}>{status}</p><button type="button" onClick={() => queueSave(latest.current)}>Save now</button></div>
+    <div className={styles.saveBar}><p aria-live="polite" className={hasError ? styles.error : ""}>{status}</p><button type="button" onClick={() => queueSave(latest.current)}>Save draft</button></div>
   </form>;
 }
 

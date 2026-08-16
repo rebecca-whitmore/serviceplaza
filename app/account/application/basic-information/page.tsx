@@ -22,7 +22,7 @@ export default async function BasicInformationPage() {
   ]);
   const primaryCategoryId = assignments?.find((assignment) => assignment.is_primary)?.category_id ?? null;
 
-  return <><header className={styles.header}><div><p className={styles.eyebrow}>Application · Section 1 of 6</p><h1>Basic information &amp; services</h1></div></header>
+  return <><header className={styles.header}><div><h1>Basic information &amp; services</h1></div></header>
     <p className={styles.intro}>Start with the essentials: who you are, your business name and the services customers can find you for.</p>
     <BasicInformationForm versionId={draft.id}
       categories={(categories ?? []).map(({ id, name, description }) => ({ id, name, description }))}
