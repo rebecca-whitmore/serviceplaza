@@ -684,6 +684,10 @@ export type Database = {
           listing_version_id: string
         }[]
       }
+      submit_application: {
+        Args: { target_version_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       publication_status: "unpublished" | "published" | "hidden" | "archived"

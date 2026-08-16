@@ -173,3 +173,13 @@ export async function saveStandOutDetails(input: StandOutDetails, requireComplet
   if (imageError) return { ok: false, message: "We couldn’t save your image preferences. Please try again." };
   return { ok: true };
 }
+
+export async function submitApplication(versionId: string, declarationAccepted: boolean): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(versionId)) return { ok: false, message: "This draft could not be identified." };
+  if (!declarationAccepted) return { ok: false, message: "Confirm the declaration before submitting." };
+  const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { error } = await supabase.rpc("submit_application", { target_version_id: versionId });
+  if (error) return { ok: false, message: "Your application isn’t ready to submit yet. Review the incomplete sections above and try again." };
+  return { ok: true };
+}
