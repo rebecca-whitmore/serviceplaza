@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { saveContactDetails, type ContactDetails } from "../actions";
 import styles from "../application.module.css";
 
@@ -44,6 +45,6 @@ export function ContactDetailsForm({ versionId, initialValues }: { versionId: st
     <div className={styles.field}><label htmlFor="websiteUrl">Website <span className={styles.optional}>(optional)</span></label><p className={styles.hint}>Enter the complete address, including https://</p><input id="websiteUrl" type="url" inputMode="url" placeholder="https://yourbusiness.co.uk" value={values.websiteUrl} onChange={(event) => update({ websiteUrl: event.target.value })} /></div>
     <fieldset className={styles.fieldset}><legend>Social links <span>(optional)</span></legend><p className={styles.hint}>Only add profiles used by this business. Enter each complete link, including https://</p><div className={styles.socialGrid}>{socialFields.map(([key, label]) => <div className={styles.field} key={key}><label htmlFor={key}>{label}</label><input id={key} type="url" inputMode="url" value={values.socialLinks[key] ?? ""} onChange={(event) => updateSocial(key, event.target.value)} placeholder={`https://${key}.com/yourbusiness`} /></div>)}</div></fieldset>
 
-    <div className={styles.saveBar}><p aria-live="polite" className={hasError ? styles.error : ""}>{status}</p><div className={styles.saveActions}><button className={styles.saveOnly} type="button" onClick={() => queueSave(latest.current)}>Save draft</button><button type="submit">Save and continue</button></div></div>
+    <div className={styles.saveBar}><p aria-live="polite" className={hasError ? styles.error : ""}>{status}</p><div className={styles.saveActions}><Link className={styles.secondaryLink} href="/account/application/basic-information">Back</Link><button className={styles.saveOnly} type="button" onClick={() => queueSave(latest.current)}>Save draft</button><button type="submit">Save and continue</button></div></div>
   </form>;
 }

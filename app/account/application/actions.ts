@@ -13,6 +13,7 @@ export type ContactDetails = {
   publicPhone: string; showPublicPhone: boolean; websiteUrl: string;
   socialLinks: Record<string, string>;
 };
+export type AboutBusiness = { versionId: string; shortSummary: string; fullDescription: string };
 
 function isOptionalWebUrl(value: string) {
   if (!value.trim()) return true;
@@ -94,5 +95,19 @@ export async function saveContactDetails(input: ContactDetails): Promise<SaveRes
     show_public_phone: Boolean(input.publicPhone.trim()), website_url: input.websiteUrl.trim() || null, social_links: socialLinks,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save your contact details. Please try again." };
+  return { ok: true };
+}
+
+export async function saveAboutBusiness(input: AboutBusiness, requireComplete = false): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
+  const shortSummary = input.shortSummary.trim(); const fullDescription = input.fullDescription.trim();
+  if (shortSummary.length > 160 || fullDescription.length > 2000) return { ok: false, message: "One or more fields is too long." };
+  if (requireComplete && !shortSummary) return { ok: false, message: "Add a short summary before continuing." };
+  if (requireComplete && fullDescription.length < 100) return { ok: false, message: "Please write at least 100 characters in your full business description before continuing." };
+  const supabase = await createClient();
+  const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { data, error } = await supabase.from("listing_versions").update({ short_summary: shortSummary, full_description: fullDescription }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
+  if (error || !data) return { ok: false, message: "We couldn’t save your business description. Please try again." };
   return { ok: true };
 }
