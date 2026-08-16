@@ -9,7 +9,7 @@ import { signOut, startApplication } from "./actions";
 export default async function AccountPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; notice?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -27,6 +27,9 @@ export default async function AccountPage({
         .select("id, contact_name")
         .eq("owner_user_id", userId)
         .maybeSingle()
+    : { data: null };
+  const { data: profile } = userId
+    ? await supabase.from("profiles").select("role").eq("id", userId).maybeSingle()
     : { data: null };
 
   let activeVersion: { id: string; status: string } | null = null;
@@ -64,6 +67,8 @@ export default async function AccountPage({
             ? "Your application is awaiting review."
             : "Create or continue your Service Plaza business listing."}
         </p>
+        {params.notice === "admin_required" ? <p className={styles.error}>That area is restricted to Service Plaza administrators.</p> : null}
+        {profile?.role === "admin" ? <Link className={styles.primaryLink} href="/admin">Open administrator review queue</Link> : null}
         {activeVersion?.status === "draft" ||
         activeVersion?.status === "changes_requested" ? (
           <Link className={styles.primaryLink} href="/account/application/basic-information">
