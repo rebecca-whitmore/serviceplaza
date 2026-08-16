@@ -158,6 +158,19 @@ export async function registerListingImage(input: ImageRegistration): Promise<Sa
   return { ok: true, oldPath: data };
 }
 
+export async function removeListingImage(versionId: string): Promise<SaveResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(versionId)) return { ok: false, message: "This draft could not be identified." };
+  const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { data: image, error: readError } = await supabase.from("listing_images").select("private_storage_path").eq("listing_version_id", versionId).maybeSingle();
+  if (readError) return { ok: false, message: "We couldn’t remove your image. Please try again." };
+  if (!image) return { ok: true };
+  const { error: deleteError } = await supabase.from("listing_images").delete().eq("listing_version_id", versionId);
+  if (deleteError) return { ok: false, message: "We couldn’t remove your image. Please try again." };
+  await supabase.storage.from("listing-images-private").remove([image.private_storage_path]);
+  return { ok: true };
+}
+
 export async function saveStandOutDetails(input: StandOutDetails, requireComplete = false): Promise<SaveResult> {
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
   const perkTitle = input.perkTitle.trim(), perkDescription = input.perkDescription.trim(), perkRedemption = input.perkRedemption.trim(), perkConditions = input.perkConditions.trim();
@@ -165,11 +178,10 @@ export async function saveStandOutDetails(input: StandOutDetails, requireComplet
   if (input.hasPlazaPerk && requireComplete && (!perkTitle || !perkDescription || !perkRedemption)) return { ok: false, message: "Complete the Plaza Perk title, description and redemption instructions before continuing." };
   const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
-  if (requireComplete) { const { data: image } = await supabase.from("listing_images").select("id").eq("listing_version_id", input.versionId).maybeSingle(); if (!image) return { ok: false, message: "Add a logo or profile image before continuing." }; }
   const perkValues = input.hasPlazaPerk ? { perk_title: perkTitle, perk_description: perkDescription, perk_redemption: perkRedemption, perk_conditions: perkConditions || null, perk_expires_on: input.perkExpiresOn || null } : { perk_title: null, perk_description: null, perk_redemption: null, perk_conditions: null, perk_expires_on: null };
   const { data, error } = await supabase.from("listing_versions").update({ has_plaza_perk: input.hasPlazaPerk, ...perkValues }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save this section. Please try again." };
-  const { error: imageError } = await supabase.from("listing_images").update({ display_publicly: input.displayImagePublicly, alt_text: input.imageAltText.trim() || null }).eq("listing_version_id", input.versionId);
+  const { error: imageError } = await supabase.from("listing_images").update({ display_publicly: true, alt_text: input.imageAltText.trim() || null }).eq("listing_version_id", input.versionId);
   if (imageError) return { ok: false, message: "We couldn’t save your image preferences. Please try again." };
   return { ok: true };
 }

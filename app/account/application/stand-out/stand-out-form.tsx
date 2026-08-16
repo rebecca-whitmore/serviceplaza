@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { registerListingImage, saveStandOutDetails, type StandOutDetails } from "../actions";
+import { registerListingImage, removeListingImage, saveStandOutDetails, type StandOutDetails } from "../actions";
 import styles from "../application.module.css";
 
 type Values = Omit<StandOutDetails, "versionId">;
@@ -43,23 +43,30 @@ export function StandOutForm({ versionId, userId, initialValues, initialImage }:
       const storagePath = `${userId}/${versionId}/${crypto.randomUUID()}.${extension}`;
       const supabase = createClient(); const { error: uploadError } = await supabase.storage.from("listing-images-private").upload(storagePath, file, { contentType: file.type, upsert: false });
       if (uploadError) throw uploadError;
-      const result = await registerListingImage({ versionId, storagePath, filename: file.name, mimeType: file.type, byteSize: file.size, width: dimensions.width, height: dimensions.height, displayPublicly: values.displayImagePublicly, altText: values.imageAltText });
+      const result = await registerListingImage({ versionId, storagePath, filename: file.name, mimeType: file.type, byteSize: file.size, width: dimensions.width, height: dimensions.height, displayPublicly: true, altText: values.imageAltText });
       if (!result.ok) { await supabase.storage.from("listing-images-private").remove([storagePath]); throw new Error(result.message); }
       if (result.oldPath && result.oldPath !== storagePath) await supabase.storage.from("listing-images-private").remove([result.oldPath]);
       if (image?.previewUrl.startsWith("blob:")) URL.revokeObjectURL(image.previewUrl);
-      setImage({ path: storagePath, filename: file.name, previewUrl, displayPublicly: values.displayImagePublicly, altText: values.imageAltText });
+      setImage({ path: storagePath, filename: file.name, previewUrl, displayPublicly: true, altText: values.imageAltText });
       setStatus("Image uploaded and saved.");
     } catch (error) { if (previewUrl) URL.revokeObjectURL(previewUrl); setHasError(true); setStatus(error instanceof Error && error.message ? error.message : "We couldn’t upload your image. Please try again."); }
     finally { setUploading(false); }
   }
 
+  async function removeImage() {
+    setUploading(true); setHasError(false); setStatus("Removing image…");
+    const result = await removeListingImage(versionId).catch(() => ({ ok: false as const, message: "We couldn’t remove your image. Please try again." }));
+    if (!result.ok) { setHasError(true); setStatus(result.message); setUploading(false); return; }
+    if (image?.previewUrl.startsWith("blob:")) URL.revokeObjectURL(image.previewUrl);
+    setImage(null); update({ displayImagePublicly: true, imageAltText: "" }); setStatus("Image removed. A placeholder will be used."); setUploading(false);
+  }
+
   return <form className={styles.form} onSubmit={(event) => { event.preventDefault(); if (!uploading) queueSave(latest.current, true); }}>
-    <fieldset className={styles.fieldset}><legend>Logo or profile image</legend><p className={styles.hint}>Add one clear JPG, PNG or WebP image, up to 5MB. This is required for your application but you decide whether it appears publicly.</p>
+    <fieldset className={styles.fieldset}><legend>Logo or profile image <span>(optional)</span></legend><p className={styles.hint}>For best results, use a square image—ideally 1200 × 1200 px and at least 600 × 600 px. JPG, PNG and WebP files up to 5MB are accepted; other proportions may be cropped.</p><p className={styles.imageFallback}>If no image is available right now, we will use a placeholder image. You can update your listing at any time.</p>
       <div className={styles.imagePanel}>{image ? <div className={styles.imagePreview}><img src={image.previewUrl} alt={values.imageAltText || "Current business image preview"} /><div><strong>{image.filename}</strong><span>Private draft image</span></div></div> : <div className={styles.imageEmpty}><strong>No image added yet</strong><span>Your image remains private while your application is a draft.</span></div>}
-        <label className={styles.uploadButton}>{uploading ? "Uploading…" : image ? "Replace image" : "Choose image"}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={(event) => { void uploadImage(event.target.files?.[0]); event.target.value = ""; }} /></label>
+        <div className={styles.imageActions}><label className={styles.uploadButton}>{uploading ? "Working…" : image ? "Replace image" : "Choose image"}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={(event) => { void uploadImage(event.target.files?.[0]); event.target.value = ""; }} /></label>{image ? <button className={styles.removeImageButton} type="button" disabled={uploading} onClick={() => void removeImage()}>Remove image</button> : null}</div>
       </div>
-      {image ? <><label className={styles.permissionChoice}><input type="checkbox" checked={values.displayImagePublicly} onChange={(event) => update({ displayImagePublicly: event.target.checked })} /><span><strong>Display this image on my public listing</strong><small>If left unticked, Service Plaza’s standard image will be used publicly instead.</small></span></label>
-        <div className={styles.field}><div className={styles.labelRow}><label htmlFor="imageAltText">Image description <span className={styles.optional}>(optional)</span></label><span>{values.imageAltText.length}/300</span></div><p className={styles.hint}>Briefly describe the image for visitors using screen readers. A business logo can simply be described as, for example, “Acme Studio logo”.</p><input id="imageAltText" maxLength={300} value={values.imageAltText} onChange={(event) => update({ imageAltText: event.target.value })} /></div></> : null}
+      {image ? <div className={styles.field}><div className={styles.labelRow}><label htmlFor="imageAltText">Image description <span className={styles.optional}>(optional)</span></label><span>{values.imageAltText.length}/300</span></div><p className={styles.hint}>Briefly describe the image for visitors using screen readers. A business logo can simply be described as, for example, “Acme Studio logo”.</p><input id="imageAltText" maxLength={300} value={values.imageAltText} onChange={(event) => update({ imageAltText: event.target.value })} /></div> : null}
     </fieldset>
 
     <div className={styles.formDivider} />
