@@ -82,9 +82,7 @@ export async function saveContactDetails(input: ContactDetails): Promise<SaveRes
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
   if (!input.publicContactName.trim() || input.publicContactName.trim().length > 120) return { ok: false, message: "Enter the contact name to show on your listing." };
   if (input.publicEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.publicEmail.trim())) return { ok: false, message: "Enter a valid email address." };
-  if (input.showPublicEmail && !input.publicEmail.trim()) return { ok: false, message: "Enter an email address before agreeing to display it." };
   if (input.publicPhone.trim().length > 40) return { ok: false, message: "Enter a telephone number using no more than 40 characters." };
-  if (input.showPublicPhone && !input.publicPhone.trim()) return { ok: false, message: "Enter a telephone number before agreeing to display it." };
   if (!isOptionalWebUrl(input.websiteUrl) || Object.values(input.socialLinks).some((value) => !isOptionalWebUrl(value))) return { ok: false, message: "Enter complete website and social links beginning with https://" };
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getClaims();
@@ -92,8 +90,8 @@ export async function saveContactDetails(input: ContactDetails): Promise<SaveRes
   const socialLinks = Object.fromEntries(Object.entries(input.socialLinks).filter(([, value]) => value.trim()).map(([key, value]) => [key, value.trim()]));
   const { data, error } = await supabase.from("listing_versions").update({
     public_contact_name: input.publicContactName.trim(), public_email: input.publicEmail.trim() || null,
-    show_public_email: input.showPublicEmail, public_phone: input.publicPhone.trim() || null,
-    show_public_phone: input.showPublicPhone, website_url: input.websiteUrl.trim() || null, social_links: socialLinks,
+    show_public_email: Boolean(input.publicEmail.trim()), public_phone: input.publicPhone.trim() || null,
+    show_public_phone: Boolean(input.publicPhone.trim()), website_url: input.websiteUrl.trim() || null, social_links: socialLinks,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save your contact details. Please try again." };
   return { ok: true };
