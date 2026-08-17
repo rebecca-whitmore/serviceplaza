@@ -11,11 +11,15 @@ function formatDate(value: string | null) {
 
 export default async function AdminPage() {
   const { supabase } = await requireAdmin();
-  const { data: versions, error } = await supabase.from("listing_versions").select("id, listing_id, version_number, supersedes_version_id, business_name, status, submitted_at, updated_at").in("status", ["draft", "pending", "changes_requested"]);
+  const { data: versions, error } = await supabase.from("listing_versions").select("id, listing_id, version_number, supersedes_version_id, business_name, status, submitted_at, updated_at");
   if (error) throw new Error("Unable to load the administrator review queue.", { cause: error });
   const latestByListing = new Map<string, NonNullable<typeof versions>[number]>();
   for (const version of versions ?? []) { const current = latestByListing.get(version.listing_id); if (!current || version.version_number > current.version_number) latestByListing.set(version.listing_id, version); }
-  const activeVersions = [...latestByListing.values()].filter((version) => version.status !== "draft" || (version.supersedes_version_id && versions?.some((previous) => previous.id === version.supersedes_version_id && previous.status === "changes_requested"))).sort((a, b) => new Date(a.submitted_at ?? a.updated_at).getTime() - new Date(b.submitted_at ?? b.updated_at).getTime());
+  const activeVersions = [...latestByListing.values()].filter((version) => {
+    if (version.status === "pending" || version.status === "changes_requested") return true;
+    if (version.status !== "draft" || !version.supersedes_version_id) return false;
+    return versions?.some((previous) => previous.id === version.supersedes_version_id && previous.status === "changes_requested");
+  }).sort((a, b) => new Date(a.submitted_at ?? a.updated_at).getTime() - new Date(b.submitted_at ?? b.updated_at).getTime());
   const listingIds = [...new Set(activeVersions.map((version) => version.listing_id))];
   const { data: listings } = listingIds.length ? await supabase.from("listings").select("id, business_id").in("id", listingIds) : { data: [] };
   const businessIds = [...new Set((listings ?? []).map((listing) => listing.business_id))];
