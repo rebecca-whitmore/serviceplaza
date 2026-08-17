@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/require-admin";
+import { DecisionPanel } from "./decision-panel";
 import styles from "./detail.module.css";
 
 function formatDate(value: string | null) { return value ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/London" }).format(new Date(value)) : "Not recorded"; }
@@ -37,5 +38,6 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
       <Section title="Image & Plaza Perk">{signed?.signedUrl ? <img className={styles.image} src={signed.signedUrl} alt={image?.alt_text || "Submitted business image"} /> : null}<List items={[["Image", image ? `${image.original_filename} · ${image.width ?? "?"} × ${image.height ?? "?"} px` : "Placeholder image required"], ["Image description", image?.alt_text], ["Plaza Perk", version.has_plaza_perk ? version.perk_title : "Not added"], ["Perk details", version.has_plaza_perk ? version.perk_description : null], ["How to claim", version.has_plaza_perk ? version.perk_redemption : null], ["Conditions", version.perk_conditions], ["Expiry", version.perk_expires_on]]} /></Section>
       <Section title="Review history">{events?.length ? <ul className={styles.history}>{events.map((event, index) => <li key={`${event.created_at}-${index}`}><strong>{event.event_type.replaceAll("_", " ")}</strong><span>{formatDate(event.created_at)}</span>{event.applicant_message ? <p>Applicant message: {event.applicant_message}</p> : null}{event.private_admin_note ? <p>Private note: {event.private_admin_note}</p> : null}</li>)}</ul> : <span className={styles.empty}>No review events recorded.</span>}</Section>
     </div><aside className={styles.private}><h2>Private applicant details</h2><div><span className={styles.label}>Name</span><p>{business?.contact_name ?? "Not provided"}</p></div><div><span className={styles.label}>Sign-in email</span><p>{business?.contact_email ?? "Not provided"}</p></div><div><span className={styles.label}>Telephone</span><p>{business?.contact_phone ?? "Not provided"}</p></div><div><span className={styles.label}>Application ID</span><p>{version.id}</p></div><div><span className={styles.label}>Listing status</span><p>{listing.publication_status}</p></div></aside></div>
+    {version.status === "pending" ? <DecisionPanel versionId={version.id} /> : null}
   </>;
 }

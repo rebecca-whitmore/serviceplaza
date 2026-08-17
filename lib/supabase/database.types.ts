@@ -635,6 +635,16 @@ export type Database = {
       }
     }
     Functions: {
+      admin_decide_application: {
+        Args: {
+          administrator_note: string
+          approved_public_image_path: string | null
+          decision: string
+          message_to_applicant: string
+          target_version_id: string
+        }
+        Returns: string | null
+      }
       register_listing_image: {
         Args: {
           file_byte_size: number
