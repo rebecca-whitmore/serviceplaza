@@ -119,3 +119,18 @@
   color: #9a2f2f;
   font-size: 0.92rem;
 }
+
+.outcome {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #8ba393;
+  border-radius: 0.5rem;
+  background: #eef5f1;
+  line-height: 1.55;
+}
+
+.outcome p { margin: 0; }
+.outcomeApproved { border-left-color: #52745f; }
+.outcomeDeclined { border-left-color: #a17167; background: #f8efed; }

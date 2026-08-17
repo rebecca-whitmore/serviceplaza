@@ -33,6 +33,7 @@ export default async function AccountPage({
     : { data: null };
 
   let activeVersion: { id: string; status: string } | null = null;
+  let outcome: { event_type: string | null; applicant_message: string | null } | null = null;
 
   if (business) {
     const { data: listing } = await supabase
@@ -46,11 +47,21 @@ export default async function AccountPage({
         .from("listing_versions")
         .select("id, status")
         .eq("listing_id", listing.id)
-        .in("status", ["draft", "pending", "changes_requested"])
         .order("version_number", { ascending: false })
         .limit(1)
         .maybeSingle();
       activeVersion = version;
+      if (version?.status === "approved" || version?.status === "declined") {
+        const { data: reviewOutcome } = await supabase
+          .from("business_review_events")
+          .select("event_type, applicant_message")
+          .eq("listing_version_id", version.id)
+          .eq("event_type", version.status)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        outcome = reviewOutcome;
+      }
     }
   }
 
@@ -65,8 +76,13 @@ export default async function AccountPage({
         <p className={styles.note}>
           {activeVersion?.status === "pending"
             ? "Your application is awaiting review."
-            : "Create or continue your Service Plaza business listing."}
+            : activeVersion?.status === "approved"
+              ? "Your application has been approved."
+              : activeVersion?.status === "declined"
+                ? "Your application review is complete."
+                : "Create or continue your Service Plaza business listing."}
         </p>
+        {outcome ? <aside className={`${styles.outcome} ${outcome.event_type === "approved" ? styles.outcomeApproved : styles.outcomeDeclined}`}><strong>{outcome.event_type === "approved" ? "Application approved" : "Application not approved"}</strong>{outcome.applicant_message ? <p>{outcome.applicant_message}</p> : <p>{outcome.event_type === "approved" ? "Your listing is ready for its next publication step." : "Please review the outcome above."}</p>}</aside> : null}
         {params.notice === "admin_required" ? <p className={styles.error}>That area is restricted to Service Plaza administrators.</p> : null}
         {profile?.role === "admin" ? <Link className={styles.primaryLink} href="/admin">Open administrator review queue</Link> : null}
         {activeVersion?.status === "draft" ||
