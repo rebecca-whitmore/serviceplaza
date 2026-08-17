@@ -647,6 +647,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_publish_listing_edit: { Args: { additional_category_ids: string[]; custom_service_names: string[]; edit_payload: Json; edit_reason: string; primary_category_id: string; selected_service_tag_ids: string[]; target_listing_id: string }; Returns: string }
       admin_set_listing_visibility: { Args: { administrator_reason: string; make_visible: boolean; target_listing_id: string }; Returns: undefined }
       complete_application_notification: { Args: { delivery_error: string; delivery_succeeded: boolean; resend_message_id: string; target_notification_id: string }; Returns: undefined }
       queue_application_notification: { Args: { notification_kind: string; target_version_id: string }; Returns: { business_name: string; delivery_status: string; notification_id: string; recipient_email: string }[] }

@@ -40,15 +40,21 @@ export async function startListingEdit() {
   if (error || !edit) redirect("/account?error=start_listing_edit");
 
   if (edit.created_new) {
-    const { data: sourceImage } = await supabase.from("listing_images").select("private_storage_path, original_filename, mime_type, byte_size, width, height, display_publicly, alt_text").eq("listing_version_id", edit.source_version_id).maybeSingle();
-    if (sourceImage) {
-      const { data: imageFile } = await supabase.storage.from("listing-images-private").download(sourceImage.private_storage_path);
+    const [{ data: sourceImage }, { data: sourceVersion }] = await Promise.all([
+      supabase.from("listing_images").select("private_storage_path, original_filename, mime_type, byte_size, width, height, display_publicly, alt_text").eq("listing_version_id", edit.source_version_id).maybeSingle(),
+      supabase.from("listing_versions").select("published_image_path").eq("id", edit.source_version_id).maybeSingle(),
+    ]);
+    const sourcePath = sourceImage?.private_storage_path ?? sourceVersion?.published_image_path;
+    const sourceBucket = sourceImage ? "listing-images-private" : "listing-images-public";
+    if (sourcePath) {
+      const { data: imageFile } = await supabase.storage.from(sourceBucket).download(sourcePath);
       if (imageFile) {
-        const extension = sourceImage.mime_type === "image/png" ? "png" : sourceImage.mime_type === "image/webp" ? "webp" : "jpg";
+        const mimeType = sourceImage?.mime_type ?? (imageFile.type === "image/png" || imageFile.type === "image/webp" ? imageFile.type : "image/jpeg");
+        const extension = mimeType === "image/png" ? "png" : mimeType === "image/webp" ? "webp" : "jpg";
         const newPath = `${auth.claims.sub}/${edit.listing_version_id}/${crypto.randomUUID()}.${extension}`;
-        const { error: uploadError } = await supabase.storage.from("listing-images-private").upload(newPath, imageFile, { contentType: sourceImage.mime_type, upsert: false });
+        const { error: uploadError } = await supabase.storage.from("listing-images-private").upload(newPath, imageFile, { contentType: mimeType, upsert: false });
         if (!uploadError) {
-          const { error: imageError } = await supabase.from("listing_images").insert({ listing_version_id: edit.listing_version_id, private_storage_path: newPath, original_filename: sourceImage.original_filename, mime_type: sourceImage.mime_type, byte_size: sourceImage.byte_size, width: sourceImage.width, height: sourceImage.height, display_publicly: sourceImage.display_publicly, alt_text: sourceImage.alt_text });
+          const { error: imageError } = await supabase.from("listing_images").insert({ listing_version_id: edit.listing_version_id, private_storage_path: newPath, original_filename: sourceImage?.original_filename ?? `listing-image.${extension}`, mime_type: mimeType, byte_size: sourceImage?.byte_size ?? imageFile.size, width: sourceImage?.width ?? null, height: sourceImage?.height ?? null, display_publicly: sourceImage?.display_publicly ?? true, alt_text: sourceImage?.alt_text ?? null });
           if (imageError) await supabase.storage.from("listing-images-private").remove([newPath]);
         }
       }

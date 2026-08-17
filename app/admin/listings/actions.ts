@@ -20,3 +20,35 @@ export async function setListingVisibility(formData: FormData) {
   revalidatePath(`/admin/listings/${listingId}`);
   redirect(`/admin/listings/${listingId}?notice=${makeVisible ? "restored" : "hidden"}`);
 }
+
+export async function publishListingEdit(formData: FormData) {
+  const listingId = String(formData.get("listingId") ?? "");
+  const value = (name: string) => String(formData.get(name) ?? "").trim();
+  const checked = (name: string) => formData.get(name) === "on";
+  if (!/^[0-9a-f-]{36}$/i.test(listingId)) redirect("/admin/listings?error=edit");
+  const primaryCategoryId = value("primaryCategoryId");
+  const additionalCategoryIds = formData.getAll("additionalCategoryIds").map(String).filter((id) => id !== primaryCategoryId);
+  const serviceTagIds = formData.getAll("serviceTagIds").map(String);
+  const customServices = value("customServices").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+  const reason = value("reason");
+  const payload = {
+    businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"),
+    publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
+    publicPhone: value("publicPhone"), showPublicPhone: checked("showPublicPhone"), websiteUrl: value("websiteUrl"),
+    socialLinks: Object.fromEntries(["instagram", "facebook", "linkedin", "tiktok", "youtube"].map((name) => [name, value(name)]).filter(([, url]) => url)),
+    offersOnline: checked("offersOnline"), offersInPerson: checked("offersInPerson"), servesLocal: checked("servesLocal"), servesUkWide: checked("servesUkWide"),
+    baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
+    perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
+  };
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason
+    || (!payload.offersOnline && !payload.offersInPerson) || (!payload.servesLocal && !payload.servesUkWide)
+    || (payload.servesLocal && (!payload.baseTownCity || !payload.ukRegion))
+    || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
+    || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
+  if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.rpc("admin_publish_listing_edit", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason });
+  if (error) redirect(`/admin/listings/${listingId}/edit?error=save`);
+  revalidatePath("/admin/listings"); revalidatePath(`/admin/listings/${listingId}`); revalidatePath("/account");
+  redirect(`/admin/listings/${listingId}?notice=edited`);
+}
