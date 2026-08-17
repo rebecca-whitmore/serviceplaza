@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { applicationSteps } from "./application-steps";
 import styles from "./application.module.css";
 import bannerStyles from "./change-request.module.css";
+import { signOut } from "../actions";
 
 export function ApplicationShell({ children, changeRequestMessage }: { children: React.ReactNode; changeRequestMessage?: string | null }) {
   const pathname = usePathname();
   return <main className={styles.main}><div className={styles.shell}>
-    <Link className={styles.backLink} href="/account">← Business account</Link>
+    <div className={styles.accountBar}><Link className={styles.backLink} href="/account">← Business account</Link><form action={signOut}><button className={styles.signOutButton} type="submit">Sign out</button></form></div>
     <nav className={styles.progress} aria-label="Application sections"><ol>
       {applicationSteps.map((step) => {
         const href = `/account/application/${step.slug}`;

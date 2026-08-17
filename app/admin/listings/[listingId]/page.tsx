@@ -24,7 +24,7 @@ export default async function AdminListingDetailPage({ params, searchParams }: {
     supabase.from("listing_services").select("name, sort_order").eq("listing_version_id", listing.current_published_version_id).order("sort_order"),
     supabase.from("listing_images").select("published_storage_path, alt_text").eq("listing_version_id", listing.current_published_version_id).maybeSingle(),
     supabase.from("listing_management_events").select("id, action, reason, created_at").eq("listing_id", listingId).order("created_at", { ascending: false }),
-    supabase.from("listing_versions").select("id, version_number, status, updated_at").eq("listing_id", listingId).in("status", ["draft", "pending", "changes_requested"]).order("version_number", { ascending: false }).limit(1),
+    supabase.from("listing_versions").select("id, version_number, status, updated_at").eq("listing_id", listingId).order("version_number", { ascending: false }).limit(1),
   ]);
   if (!version) notFound();
   const publishedImagePath = image?.published_storage_path ?? version.published_image_path;
@@ -32,7 +32,8 @@ export default async function AdminListingDetailPage({ params, searchParams }: {
   const primaryCategory = categories?.find((item) => item.is_primary)?.categories?.name;
   const additionalCategories = categories?.filter((item) => !item.is_primary).map((item) => item.categories?.name).filter(Boolean) ?? [];
   const socialLinks = version.social_links && typeof version.social_links === "object" && !Array.isArray(version.social_links) ? Object.entries(version.social_links).filter((entry): entry is [string, string] => typeof entry[1] === "string" && Boolean(entry[1])) : [];
-  const activeUpdate = updates?.[0];
+  const latestVersion = updates?.[0];
+  const activeUpdate = latestVersion && latestVersion.id !== listing.current_published_version_id && ["draft", "pending", "changes_requested"].includes(latestVersion.status) ? latestVersion : undefined;
 
   return <><Link className={styles.back} href="/admin/listings">← Back to listings</Link>
     <header className={styles.header}><div><p>Approved listing · Version {version.version_number}</p><h1>{version.business_name}</h1><span className={listing.publication_status === "published" ? styles.published : styles.hidden}>{listing.publication_status === "published" ? "Published" : "Hidden"}</span></div><div className={styles.owner}><strong>{business?.contact_name ?? "Owner not provided"}</strong><span>{business?.contact_email ?? "Email not provided"}</span><span>Published {formatDate(listing.published_at)}</span></div></header>
