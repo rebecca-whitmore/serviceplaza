@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      listing_outbound_clicks: {
+        Row: { clicked_at: string; id: string; link_type: string; listing_id: string; listing_version_id: string }
+        Insert: { clicked_at?: string; id?: string; link_type: string; listing_id: string; listing_version_id: string }
+        Update: { clicked_at?: string; id?: string; link_type?: string; listing_id?: string; listing_version_id?: string }
+        Relationships: []
+      }
       listing_management_events: {
         Row: { action: string; created_at: string; id: string; listing_id: string; listing_version_id: string; performed_by_user_id: string; reason: string | null }
         Insert: { action: string; created_at?: string; id?: string; listing_id: string; listing_version_id: string; performed_by_user_id: string; reason?: string | null }
@@ -654,6 +660,8 @@ export type Database = {
       }
     }
     Functions: {
+      get_public_listing_taxonomy: { Args: { target_version_id: string }; Returns: { additional_categories: Json; primary_category: Json; service_tags: Json; services: Json }[] }
+      record_listing_outbound_click: { Args: { target_link_type: string; target_slug: string }; Returns: string }
       admin_publish_listing_edit_with_uk: { Args: { additional_category_ids: string[]; confirm_uk_based: boolean; custom_service_names: string[]; display_base_location: boolean; edit_payload: Json; edit_reason: string; primary_category_id: string; selected_service_tag_ids: string[]; target_listing_id: string }; Returns: string }
       get_published_listing_details: { Args: { target_slug?: string | null }; Returns: Database["public"]["Views"]["published_listing_details"]["Row"][] }
       admin_publish_listing_edit: { Args: { additional_category_ids: string[]; custom_service_names: string[]; edit_payload: Json; edit_reason: string; primary_category_id: string; selected_service_tag_ids: string[]; target_listing_id: string }; Returns: string }

@@ -5,6 +5,7 @@
 .owner { display: grid; gap: .2rem; text-align: right; }
 .owner span { color: #68736d; font-size: .86rem; }
 .published, .hidden { display: inline-block; padding: .3rem .6rem; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+.headerActions { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }.publicLink { color: #304f3d; font-size: .88rem; font-weight: 700; }
 .published { background: #e4f1e8; color: #315740; }.hidden { background: #f3e5e2; color: #793f35; }
 .success, .error, .update { margin: 0 0 1.5rem; padding: 1rem 1.15rem; border-radius: .6rem; line-height: 1.5; }
 .success { background: #e8f3ec; color: #315740; }.error { background: #f7e9e6; color: #7b3329; }
