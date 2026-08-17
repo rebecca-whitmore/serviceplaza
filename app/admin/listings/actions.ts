@@ -40,14 +40,15 @@ export async function publishListingEdit(formData: FormData) {
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
-  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason
+  const isUkBased = checked("isUkBased"); const showBaseLocation = checked("showBaseLocation");
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
     || (!payload.offersOnline && !payload.offersInPerson) || (!payload.servesLocal && !payload.servesUkWide)
     || (payload.servesLocal && (!payload.baseTownCity || !payload.ukRegion))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
   const { supabase } = await requireAdmin();
-  const { error } = await supabase.rpc("admin_publish_listing_edit", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason });
+  const { error } = await supabase.rpc("admin_publish_listing_edit_with_uk", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason, confirm_uk_based: isUkBased, display_base_location: showBaseLocation });
   if (error) redirect(`/admin/listings/${listingId}/edit?error=save`);
   revalidatePath("/admin/listings"); revalidatePath(`/admin/listings/${listingId}`); revalidatePath("/account");
   redirect(`/admin/listings/${listingId}?notice=edited`);

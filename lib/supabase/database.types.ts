@@ -283,6 +283,7 @@ export type Database = {
           declaration_accepted_at: string | null
           full_description: string
           has_plaza_perk: boolean
+          is_uk_based: boolean
           id: string
           listing_id: string
           offers_in_person: boolean
@@ -302,6 +303,7 @@ export type Database = {
           short_summary: string
           show_public_email: boolean
           show_public_phone: boolean
+          show_base_location: boolean
           social_links: Json
           status: Database["public"]["Enums"]["submission_status"]
           submitted_at: string | null
@@ -323,6 +325,7 @@ export type Database = {
           declaration_accepted_at?: string | null
           full_description?: string
           has_plaza_perk?: boolean
+          is_uk_based?: boolean
           id?: string
           listing_id: string
           offers_in_person?: boolean
@@ -342,6 +345,7 @@ export type Database = {
           short_summary?: string
           show_public_email?: boolean
           show_public_phone?: boolean
+          show_base_location?: boolean
           social_links?: Json
           status?: Database["public"]["Enums"]["submission_status"]
           submitted_at?: string | null
@@ -363,6 +367,7 @@ export type Database = {
           declaration_accepted_at?: string | null
           full_description?: string
           has_plaza_perk?: boolean
+          is_uk_based?: boolean
           id?: string
           listing_id?: string
           offers_in_person?: boolean
@@ -382,6 +387,7 @@ export type Database = {
           short_summary?: string
           show_public_email?: boolean
           show_public_phone?: boolean
+          show_base_location?: boolean
           social_links?: Json
           status?: Database["public"]["Enums"]["submission_status"]
           submitted_at?: string | null
@@ -621,6 +627,7 @@ export type Database = {
           business_name: string | null
           full_description: string | null
           has_plaza_perk: boolean | null
+          is_uk_based: boolean | null
           id: string | null
           offers_in_person: boolean | null
           offers_online: boolean | null
@@ -647,6 +654,8 @@ export type Database = {
       }
     }
     Functions: {
+      admin_publish_listing_edit_with_uk: { Args: { additional_category_ids: string[]; confirm_uk_based: boolean; custom_service_names: string[]; display_base_location: boolean; edit_payload: Json; edit_reason: string; primary_category_id: string; selected_service_tag_ids: string[]; target_listing_id: string }; Returns: string }
+      get_published_listing_details: { Args: { target_slug?: string | null }; Returns: Database["public"]["Views"]["published_listing_details"]["Row"][] }
       admin_publish_listing_edit: { Args: { additional_category_ids: string[]; custom_service_names: string[]; edit_payload: Json; edit_reason: string; primary_category_id: string; selected_service_tag_ids: string[]; target_listing_id: string }; Returns: string }
       admin_set_listing_visibility: { Args: { administrator_reason: string; make_visible: boolean; target_listing_id: string }; Returns: undefined }
       complete_application_notification: { Args: { delivery_error: string; delivery_succeeded: boolean; resend_message_id: string; target_notification_id: string }; Returns: undefined }

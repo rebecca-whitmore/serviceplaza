@@ -16,8 +16,9 @@ export type ContactDetails = {
 };
 export type AboutBusiness = { versionId: string; shortSummary: string; fullDescription: string };
 export type HowYouWork = {
-  versionId: string; offersOnline: boolean; offersInPerson: boolean;
-  servesLocal: boolean; servesUkWide: boolean; baseTownCity: string; ukRegion: string;
+  versionId: string; isUkBased: boolean; showBaseLocation: boolean;
+  offersOnline: boolean; offersInPerson: boolean; servesLocal: boolean; servesUkWide: boolean;
+  baseTownCity: string; ukRegion: string;
 };
 export type StandOutDetails = {
   versionId: string; displayImagePublicly: boolean; imageAltText: string; hasPlazaPerk: boolean;
@@ -129,17 +130,18 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
   const baseTownCity = input.baseTownCity.trim(); const ukRegion = input.ukRegion.trim();
   if (baseTownCity.length > 120 || ukRegion.length > 120) return { ok: false, message: "One or more location fields is too long." };
+  if (requireComplete && !input.isUkBased) return { ok: false, message: "Confirm that this business is based in the UK before continuing." };
+  if (requireComplete && (!baseTownCity || !ukRegion)) return { ok: false, message: "Add the town or city and county or region where this business is based." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
   if (requireComplete && !input.servesLocal && !input.servesUkWide) return { ok: false, message: "Choose at least one area that your business serves." };
-  if (requireComplete && input.servesLocal && (!baseTownCity || !ukRegion)) return { ok: false, message: "Add your base town or city and UK region for local services." };
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
   const { data, error } = await supabase.from("listing_versions").update({
+    is_uk_based: input.isUkBased, show_base_location: input.showBaseLocation,
     offers_online: input.offersOnline, offers_in_person: input.offersInPerson,
     serves_local: input.servesLocal, serves_uk_wide: input.servesUkWide,
-    base_town_city: input.servesLocal ? baseTownCity || null : null,
-    uk_region: input.servesLocal ? ukRegion || null : null,
+    base_town_city: baseTownCity || null, uk_region: ukRegion || null,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
   return { ok: true };
