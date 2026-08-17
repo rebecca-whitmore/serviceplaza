@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      listing_management_events: {
+        Row: { action: string; created_at: string; id: string; listing_id: string; listing_version_id: string; performed_by_user_id: string; reason: string | null }
+        Insert: { action: string; created_at?: string; id?: string; listing_id: string; listing_version_id: string; performed_by_user_id: string; reason?: string | null }
+        Update: { action?: string; created_at?: string; id?: string; listing_id?: string; listing_version_id?: string; performed_by_user_id?: string; reason?: string | null }
+        Relationships: []
+      }
       application_email_notifications: {
         Row: { attempts: number; created_at: string; id: string; last_error: string | null; listing_version_id: string; notification_type: string; provider_message_id: string | null; recipient_email: string; sent_at: string | null; status: string; updated_at: string }
         Insert: { attempts?: number; created_at?: string; id?: string; last_error?: string | null; listing_version_id: string; notification_type: string; provider_message_id?: string | null; recipient_email: string; sent_at?: string | null; status?: string; updated_at?: string }
@@ -641,6 +647,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_set_listing_visibility: { Args: { administrator_reason: string; make_visible: boolean; target_listing_id: string }; Returns: undefined }
       complete_application_notification: { Args: { delivery_error: string; delivery_succeeded: boolean; resend_message_id: string; target_notification_id: string }; Returns: undefined }
       queue_application_notification: { Args: { notification_kind: string; target_version_id: string }; Returns: { business_name: string; delivery_status: string; notification_id: string; recipient_email: string }[] }
       admin_decide_application: {
