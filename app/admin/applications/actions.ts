@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/require-admin";
+import { sendApplicationNotification, type ApplicationNotificationType } from "@/lib/email/application-notifications";
 
 export type AdminDecision = "approve" | "request_changes" | "decline";
 export type DecisionResult = { ok: true } | { ok: false; message: string };
@@ -36,6 +37,22 @@ export async function decideApplication(input: { versionId: string; decision: Ad
     if (publicImagePath) await supabase.storage.from("listing-images-public").remove([publicImagePath]);
     return { ok: false, message: "The decision could not be recorded. The application remains pending." };
   }
+  const notificationType: Record<AdminDecision, ApplicationNotificationType> = {
+    approve: "approved", request_changes: "changes_requested", decline: "declined",
+  };
+  await sendApplicationNotification(supabase, input.versionId, notificationType[input.decision]);
   revalidatePath("/admin"); revalidatePath(`/admin/applications/${input.versionId}`); revalidatePath("/account");
   return { ok: true };
+}
+
+export async function retryApplicationNotification(formData: FormData) {
+  const notificationId = String(formData.get("notificationId") ?? "");
+  if (!/^[0-9a-f-]{36}$/i.test(notificationId)) return;
+  const { supabase } = await requireAdmin();
+  const { data: notification } = await supabase.from("application_email_notifications")
+    .select("listing_version_id, notification_type").eq("id", notificationId).eq("status", "failed").maybeSingle();
+  const allowed: ApplicationNotificationType[] = ["submission_received", "resubmission_received", "changes_requested", "approved", "declined"];
+  if (!notification || !allowed.includes(notification.notification_type as ApplicationNotificationType)) return;
+  await sendApplicationNotification(supabase, notification.listing_version_id, notification.notification_type as ApplicationNotificationType);
+  revalidatePath("/admin");
 }

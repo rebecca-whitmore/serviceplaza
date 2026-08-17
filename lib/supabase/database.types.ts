@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      application_email_notifications: {
+        Row: { attempts: number; created_at: string; id: string; last_error: string | null; listing_version_id: string; notification_type: string; provider_message_id: string | null; recipient_email: string; sent_at: string | null; status: string; updated_at: string }
+        Insert: { attempts?: number; created_at?: string; id?: string; last_error?: string | null; listing_version_id: string; notification_type: string; provider_message_id?: string | null; recipient_email: string; sent_at?: string | null; status?: string; updated_at?: string }
+        Update: { attempts?: number; created_at?: string; id?: string; last_error?: string | null; listing_version_id?: string; notification_type?: string; provider_message_id?: string | null; recipient_email?: string; sent_at?: string | null; status?: string; updated_at?: string }
+        Relationships: [{ foreignKeyName: "application_email_notifications_listing_version_id_fkey"; columns: ["listing_version_id"]; isOneToOne: false; referencedRelation: "listing_versions"; referencedColumns: ["id"] }]
+      }
       businesses: {
         Row: {
           contact_email: string
@@ -635,6 +641,8 @@ export type Database = {
       }
     }
     Functions: {
+      complete_application_notification: { Args: { delivery_error: string; delivery_succeeded: boolean; resend_message_id: string; target_notification_id: string }; Returns: undefined }
+      queue_application_notification: { Args: { notification_kind: string; target_version_id: string }; Returns: { business_name: string; delivery_status: string; notification_id: string; recipient_email: string }[] }
       admin_decide_application: {
         Args: {
           administrator_note: string

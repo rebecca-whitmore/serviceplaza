@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
+import { sendApplicationNotification } from "@/lib/email/application-notifications";
 
 export type BusinessBasics = { versionId: string; businessName: string; shortSummary: string; fullDescription: string };
 export type SaveResult = { ok: true } | { ok: false; message: string };
@@ -191,7 +192,9 @@ export async function submitApplication(versionId: string, declarationAccepted: 
   if (!declarationAccepted) return { ok: false, message: "Confirm the declaration before submitting." };
   const supabase = await createClient(); const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
+  const { data: draft } = await supabase.from("listing_versions").select("supersedes_version_id").eq("id", versionId).eq("status", "draft").maybeSingle();
   const { error } = await supabase.rpc("submit_application", { target_version_id: versionId });
   if (error) return { ok: false, message: "Your application isn’t ready to submit yet. Review the incomplete sections above and try again." };
+  await sendApplicationNotification(supabase, versionId, draft?.supersedes_version_id ? "resubmission_received" : "submission_received");
   return { ok: true };
 }

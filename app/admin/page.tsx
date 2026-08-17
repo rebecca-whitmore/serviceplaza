@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import styles from "./admin.module.css";
+import emailStyles from "./email-issues.module.css";
+import { retryApplicationNotification } from "./applications/actions";
 
 function formatDate(value: string | null) {
   if (!value) return "Not recorded";
@@ -20,10 +22,13 @@ export default async function AdminPage() {
   const { data: businesses } = businessIds.length ? await supabase.from("businesses").select("id, contact_name, contact_email").in("id", businessIds) : { data: [] };
   const rows = activeVersions.map((version) => { const listing = listings?.find((item) => item.id === version.listing_id); const business = businesses?.find((item) => item.id === listing?.business_id); return { ...version, contactName: business?.contact_name, contactEmail: business?.contact_email }; });
   const pendingCount = rows.filter((row) => row.status === "pending").length; const changesCount = rows.filter((row) => row.status === "changes_requested" || row.status === "draft").length;
+  const { data: failedEmails } = await supabase.from("application_email_notifications")
+    .select("id, recipient_email, notification_type, attempts, last_error, updated_at").eq("status", "failed").order("updated_at", { ascending: false });
 
   return <><header className={styles.header}><div><p className={styles.eyebrow}>Private administration</p><h1>Review queue</h1></div><p>Applications submitted by business users appear here for private Service Plaza review.</p></header>
     <section className={styles.stats} aria-label="Queue totals"><div className={styles.stat}><strong>{pendingCount}</strong><span>Awaiting review</span></div><div className={styles.stat}><strong>{changesCount}</strong><span>With business for changes</span></div><div className={styles.stat}><strong>{rows.length}</strong><span>Active businesses</span></div></section>
     <section className={styles.queue}><header className={styles.queueHeader}><h2>Applications</h2><span>One current row per business</span></header>{rows.length ? <div className={styles.tableWrap}><table className={styles.table}><thead><tr><th>Business</th><th>Applicant</th><th>Last activity</th><th>Status</th><th>Action</th></tr></thead><tbody>{rows.map((row) => <tr key={row.listing_id}><td><div className={styles.businessName}><strong>{row.business_name || "Unnamed business"}</strong><span>Version {row.version_number}</span></div></td><td><div className={styles.businessName}><strong>{row.contactName ?? "Not provided"}</strong><span>{row.contactEmail ?? "No email"}</span></div></td><td>{formatDate(row.submitted_at ?? row.updated_at)}</td><td><span className={styles.status}>{row.status === "pending" ? "Awaiting review" : row.status === "draft" ? "Business editing" : "Changes requested"}</span></td><td><Link href={`/admin/applications/${row.id}`}>{row.status === "pending" ? "Review" : "View"}</Link></td></tr>)}</tbody></table></div> : <div className={styles.empty}><strong>No active applications.</strong><p>Submitted applications and outstanding change requests will appear here.</p></div>}</section>
+    {failedEmails?.length ? <section className={emailStyles.emailIssues}><header><h2>Email delivery issues</h2><p>These workflow updates were saved, but their emails were not delivered.</p></header>{failedEmails.map((email) => <div className={emailStyles.emailIssue} key={email.id}><div><strong>{email.recipient_email}</strong><span>{email.notification_type.replaceAll("_", " ")} · {email.attempts} {email.attempts === 1 ? "attempt" : "attempts"} · {formatDate(email.updated_at)}</span>{email.last_error ? <small>{email.last_error}</small> : null}</div><form action={retryApplicationNotification}><input type="hidden" name="notificationId" value={email.id}/><button type="submit">Retry email</button></form></div>)}</section> : null}
     <p className={styles.nextNote}>Each business appears once at its latest workflow stage. Earlier submissions and decisions remain preserved in its review history.</p>
   </>;
 }
