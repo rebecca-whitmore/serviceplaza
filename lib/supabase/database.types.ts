@@ -702,6 +702,10 @@ export type Database = {
           listing_version_id: string
         }[]
       }
+      start_listing_edit: {
+        Args: Record<PropertyKey, never>
+        Returns: { created_new: boolean; listing_version_id: string; source_version_id: string }[]
+      }
       submit_application: {
         Args: { target_version_id: string }
         Returns: undefined

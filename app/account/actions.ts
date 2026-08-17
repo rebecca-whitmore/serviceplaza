@@ -30,3 +30,30 @@ export async function startApplication(formData: FormData) {
   revalidatePath("/account");
   redirect("/account/application/basic-information");
 }
+
+export async function startListingEdit() {
+  const supabase = await createClient();
+  const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) redirect("/login");
+  const { data, error } = await supabase.rpc("start_listing_edit");
+  const edit = data?.[0];
+  if (error || !edit) redirect("/account?error=start_listing_edit");
+
+  if (edit.created_new) {
+    const { data: sourceImage } = await supabase.from("listing_images").select("private_storage_path, original_filename, mime_type, byte_size, width, height, display_publicly, alt_text").eq("listing_version_id", edit.source_version_id).maybeSingle();
+    if (sourceImage) {
+      const { data: imageFile } = await supabase.storage.from("listing-images-private").download(sourceImage.private_storage_path);
+      if (imageFile) {
+        const extension = sourceImage.mime_type === "image/png" ? "png" : sourceImage.mime_type === "image/webp" ? "webp" : "jpg";
+        const newPath = `${auth.claims.sub}/${edit.listing_version_id}/${crypto.randomUUID()}.${extension}`;
+        const { error: uploadError } = await supabase.storage.from("listing-images-private").upload(newPath, imageFile, { contentType: sourceImage.mime_type, upsert: false });
+        if (!uploadError) {
+          const { error: imageError } = await supabase.from("listing_images").insert({ listing_version_id: edit.listing_version_id, private_storage_path: newPath, original_filename: sourceImage.original_filename, mime_type: sourceImage.mime_type, byte_size: sourceImage.byte_size, width: sourceImage.width, height: sourceImage.height, display_publicly: sourceImage.display_publicly, alt_text: sourceImage.alt_text });
+          if (imageError) await supabase.storage.from("listing-images-private").remove([newPath]);
+        }
+      }
+    }
+  }
+  revalidatePath("/account");
+  redirect("/account/application/basic-information");
+}

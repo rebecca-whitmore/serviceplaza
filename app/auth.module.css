@@ -22,6 +22,19 @@
   text-underline-offset: 0.2em;
 }
 
+.primaryButton {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: #24372c;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
 .primaryLink {
   display: inline-block;
   margin-bottom: 1.5rem;

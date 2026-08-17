@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 import styles from "../auth.module.css";
-import { signOut, startApplication } from "./actions";
+import { signOut, startApplication, startListingEdit } from "./actions";
 
 export default async function AccountPage({
   searchParams,
@@ -83,7 +83,9 @@ export default async function AccountPage({
                 : "Create or continue your Service Plaza business listing."}
         </p>
         {outcome ? <aside className={`${styles.outcome} ${outcome.event_type === "approved" ? styles.outcomeApproved : styles.outcomeDeclined}`}><strong>{outcome.event_type === "approved" ? "Application approved" : "Application not approved"}</strong>{outcome.applicant_message ? <p>{outcome.applicant_message}</p> : <p>{outcome.event_type === "approved" ? "Your listing is ready for its next publication step." : "Please review the outcome above."}</p>}</aside> : null}
+        {activeVersion?.status === "approved" ? <form action={startListingEdit}><button className={styles.primaryButton} type="submit">Edit your listing</button></form> : null}
         {params.notice === "admin_required" ? <p className={styles.error}>That area is restricted to Service Plaza administrators.</p> : null}
+        {params.error === "start_listing_edit" ? <p className={styles.error}>We couldn’t prepare your listing for editing. Your published listing has not been changed.</p> : null}
         {profile?.role === "admin" ? <Link className={styles.primaryLink} href="/admin">Open administrator review queue</Link> : null}
         {activeVersion?.status === "draft" ||
         activeVersion?.status === "changes_requested" ? (
