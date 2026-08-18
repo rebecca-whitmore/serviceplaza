@@ -131,17 +131,16 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
   const baseTownCity = input.baseTownCity.trim(); const ukRegion = input.ukRegion.trim();
   if (baseTownCity.length > 120 || ukRegion.length > 120) return { ok: false, message: "One or more location fields is too long." };
   if (requireComplete && !input.isUkBased) return { ok: false, message: "Confirm that this business is based in the UK before continuing." };
-  if (requireComplete && !ukRegion) return { ok: false, message: "Add the county or region where this business is based." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
-  if (requireComplete && !input.servesLocal && !input.servesUkWide) return { ok: false, message: "Choose at least one area that your business serves." };
+  if (requireComplete && input.offersInPerson && !baseTownCity && !ukRegion) return { ok: false, message: "Add a base town or city, a county or region, or both for in-person services." };
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
   const { data, error } = await supabase.from("listing_versions").update({
-    is_uk_based: input.isUkBased, show_base_location: input.showBaseLocation,
+    is_uk_based: input.isUkBased, show_base_location: input.offersInPerson && Boolean(baseTownCity || ukRegion),
     offers_online: input.offersOnline, offers_in_person: input.offersInPerson,
-    serves_local: input.servesLocal, serves_uk_wide: input.servesUkWide,
-    base_town_city: baseTownCity || null, uk_region: ukRegion || null,
+    serves_local: input.offersInPerson, serves_uk_wide: input.offersOnline,
+    base_town_city: input.offersInPerson ? baseTownCity || null : null, uk_region: input.offersInPerson ? ukRegion || null : null,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
   return { ok: true };

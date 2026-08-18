@@ -47,14 +47,15 @@ export async function publishListingEdit(formData: FormData) {
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
     publicPhone: value("publicPhone"), showPublicPhone: checked("showPublicPhone"), websiteUrl: value("websiteUrl"),
     socialLinks: Object.fromEntries(["instagram", "facebook", "linkedin", "tiktok", "youtube"].map((name) => [name, value(name)]).filter(([, url]) => url)),
-    offersOnline: checked("offersOnline"), offersInPerson: checked("offersInPerson"), servesLocal: checked("servesLocal"), servesUkWide: checked("servesUkWide"),
+    offersOnline: checked("offersOnline"), offersInPerson: checked("offersInPerson"),
+    servesLocal: checked("offersInPerson"), servesUkWide: checked("offersOnline"),
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
-  const isUkBased = checked("isUkBased"); const showBaseLocation = checked("showBaseLocation");
+  const isUkBased = checked("isUkBased"); const showBaseLocation = payload.offersInPerson && Boolean(payload.baseTownCity || payload.ukRegion);
   if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
-    || (!payload.offersOnline && !payload.offersInPerson) || (!payload.servesLocal && !payload.servesUkWide)
-    || !payload.ukRegion
+    || (!payload.offersOnline && !payload.offersInPerson)
+    || (payload.offersInPerson && !payload.baseTownCity && !payload.ukRegion)
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
