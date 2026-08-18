@@ -23,4 +23,8 @@
 .published { background: #e4f1e8; color: #315740; }
 .hidden { background: #f3e5e2; color: #793f35; }
 .empty { padding: 3rem 1.25rem; text-align: center; color: #66716b; }
+.internalFlags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .45rem; }
+.internalFlags span { display: inline-block; padding: .2rem .45rem; border-radius: 999px; font-size: .68rem; font-weight: 700; }
+.noWebsite { background: #ecefed; color: #505b55; }
+.websiteOpportunity { background: #f7ebca; color: #725b1e; }
 @media (max-width: 48rem) { .header { align-items: flex-start; flex-direction: column; } .summary { grid-template-columns: 1fr; } }

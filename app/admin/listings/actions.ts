@@ -21,6 +21,17 @@ export async function setListingVisibility(formData: FormData) {
   redirect(`/admin/listings/${listingId}?notice=${makeVisible ? "restored" : "hidden"}`);
 }
 
+export async function setWebsiteOpportunity(formData: FormData) {
+  const listingId = String(formData.get("listingId") ?? "");
+  const opportunity = formData.get("opportunity") === "true";
+  if (!/^[0-9a-f-]{36}$/i.test(listingId)) redirect("/admin/listings");
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.rpc("admin_set_website_opportunity", { target_listing_id: listingId, opportunity });
+  if (error) redirect(`/admin/listings/${listingId}?error=internal_flag`);
+  revalidatePath("/admin/listings"); revalidatePath(`/admin/listings/${listingId}`);
+  redirect(`/admin/listings/${listingId}?notice=${opportunity ? "opportunity_added" : "opportunity_removed"}`);
+}
+
 export async function publishListingEdit(formData: FormData) {
   const listingId = String(formData.get("listingId") ?? "");
   const value = (name: string) => String(formData.get(name) ?? "").trim();

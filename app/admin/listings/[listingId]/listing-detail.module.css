@@ -8,6 +8,7 @@
 .headerActions { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }.publicLink { color: #304f3d; font-size: .88rem; font-weight: 700; }
 .published { background: #e4f1e8; color: #315740; }.hidden { background: #f3e5e2; color: #793f35; }
 .success, .error, .update { margin: 0 0 1.5rem; padding: 1rem 1.15rem; border-radius: .6rem; line-height: 1.5; }
+.internalReference { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 1.5rem; padding: .85rem 1rem; border: 1px dashed #c9b778; border-radius: .65rem; background: #fffbef; }.internalReference p { margin: .2rem 0 0; color: #665e43; font-size: .85rem; }.internalReference form { margin: 0; }.internalReference button { padding: .55rem .75rem; border: 1px solid #8a7435; border-radius: 999px; background: #fff; color: #66521c; cursor: pointer; font: inherit; font-size: .78rem; font-weight: 700; white-space: nowrap; }
 .success { background: #e8f3ec; color: #315740; }.error { background: #f7e9e6; color: #7b3329; }
 .update { border-left: 4px solid #8ba393; background: #eef5f1; }.update p { margin: .25rem 0; }.update a { color: #304f3d; font-weight: 700; }
 .columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(17rem, 1fr); gap: 1.25rem; align-items: start; }
@@ -20,4 +21,4 @@
 .card form { display: grid; gap: .7rem; }.card label { font-weight: 700; }.card label span { color: #68736d; font-weight: 400; }.card textarea { width: 100%; padding: .75rem; border: 1px solid #9da7a1; border-radius: .55rem; font: inherit; resize: vertical; }.card form p { margin: 0; color: #68736d; font-size: .84rem; }.card button { justify-self: start; padding: .7rem 1rem; border: 0; border-radius: 999px; background: #304f3d; color: #fff; cursor: pointer; font: inherit; font-weight: 700; }.card .danger { background: #87483d; }
 .history { display: grid; gap: 1rem; margin: 0; padding-left: 1.25rem; }.history li { padding-left: .25rem; }.history strong, .history span { display: block; }.history span { margin-top: .15rem; color: #68736d; font-size: .8rem; }.history p { margin: .35rem 0 0; font-size: .88rem; }
 .editLink { display: inline-block; padding: .7rem 1rem; border-radius: 999px; background: #304f3d; color: #fff; font-weight: 700; text-decoration: none; }
-@media (max-width: 48rem) { .header { align-items: flex-start; flex-direction: column; }.owner { text-align: left; }.columns { grid-template-columns: 1fr; }.sidebar { position: static; } }
+@media (max-width: 48rem) { .header,.internalReference { align-items: flex-start; flex-direction: column; }.owner { text-align: left; }.columns { grid-template-columns: 1fr; }.sidebar { position: static; } }
