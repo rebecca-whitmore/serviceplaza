@@ -666,6 +666,9 @@ export type Database = {
       }
     }
     Functions: {
+      admin_remove_pending_application_image: { Args: { target_version_id: string }; Returns: string | null }
+      admin_update_pending_application_image: { Args: { file_byte_size: number | null; file_mime_type: string | null; filename: string | null; image_alt_text: string; storage_path: string | null; target_version_id: string }; Returns: string | null }
+      admin_edit_pending_application: { Args: { custom_service_names: string[]; edit_payload: Json; edit_reason: string; target_version_id: string }; Returns: undefined }
       admin_set_website_opportunity: { Args: { opportunity: boolean; target_listing_id: string }; Returns: undefined }
       get_public_listing_taxonomy: { Args: { target_version_id: string }; Returns: { additional_categories: Json; primary_category: Json; service_tags: Json; services: Json }[] }
       record_listing_outbound_click: { Args: { target_link_type: string; target_slug: string }; Returns: string }
@@ -752,6 +755,7 @@ export type Database = {
         | "approved"
         | "declined"
         | "withdrawn"
+        | "admin_edited"
       submission_status:
         | "draft"
         | "pending"
@@ -895,6 +899,7 @@ export const Constants = {
         "approved",
         "declined",
         "withdrawn",
+        "admin_edited",
       ],
       submission_status: [
         "draft",
