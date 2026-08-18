@@ -443,6 +443,7 @@ export type Database = {
       }
       listings: {
         Row: {
+          first_published_at: string | null
           business_id: string
           created_at: string
           current_published_version_id: string | null
@@ -453,6 +454,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          first_published_at?: string | null
           business_id: string
           created_at?: string
           current_published_version_id?: string | null
@@ -463,6 +465,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          first_published_at?: string | null
           business_id?: string
           created_at?: string
           current_published_version_id?: string | null
@@ -635,6 +638,7 @@ export type Database = {
       }
       published_listing_details: {
         Row: {
+          first_published_at: string | null
           base_town_city: string | null
           business_name: string | null
           full_description: string | null
