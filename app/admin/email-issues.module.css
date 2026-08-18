@@ -6,6 +6,6 @@
 .emailIssue:last-child { border-bottom: 0; }
 .emailIssue > div { display: grid; gap: .2rem; }
 .emailIssue span, .emailIssue small { color: #6e625f; font-size: .82rem; }
-.emailIssue button { border: 0; border-radius: 999px; background: #30445a; color: #fff; padding: .65rem 1rem; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.emailIssue button { border: 0; border-radius: 999px; background: #3457e5; color: #fff; padding: .65rem 1rem; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 
 @media (max-width: 44rem) { .emailIssue { align-items: flex-start; flex-direction: column; } }

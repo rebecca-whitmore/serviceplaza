@@ -18,7 +18,7 @@
 .panel td { font-size: .9rem; }
 .panel td strong, .panel td small { display: block; }
 .panel td small { margin-top: .2rem; color: #68736d; }
-.panel a { color: #30445a; font-weight: 700; }
+.panel a { color: #3457e5; font-weight: 700; }
 .published, .hidden { display: inline-block; padding: .28rem .55rem; border-radius: 999px; font-size: .76rem; font-weight: 700; }
 .published { background: #e4f1e8; color: #315740; }
 .hidden { background: #f3e5e2; color: #793f35; }
