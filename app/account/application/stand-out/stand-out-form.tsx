@@ -24,7 +24,7 @@ The Perk should:
 
 First, ask me any essential questions you still need answered, including what I can sustainably offer and whether I want an expiry date or limits. Ask one question at a time and do not invent details.
 
-Then suggest five varied Plaza Perk ideas and briefly explain why each could appeal to my customers. Help me choose and refine one. Once I am happy, provide final copy under these exact headings:
+Then suggest two varied Plaza Perk ideas and briefly explain why each could appeal to my customers. Help me choose and refine one. Once I am happy, provide final copy under these exact headings:
 
 Perk title (maximum 160 characters)
 What the Perk includes
