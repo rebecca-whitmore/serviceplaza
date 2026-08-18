@@ -54,7 +54,7 @@ export async function publishListingEdit(formData: FormData) {
   const isUkBased = checked("isUkBased"); const showBaseLocation = checked("showBaseLocation");
   if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
     || (!payload.offersOnline && !payload.offersInPerson) || (!payload.servesLocal && !payload.servesUkWide)
-    || (payload.servesLocal && (!payload.baseTownCity || !payload.ukRegion))
+    || !payload.ukRegion
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);

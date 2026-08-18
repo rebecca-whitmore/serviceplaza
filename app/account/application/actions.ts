@@ -131,7 +131,7 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
   const baseTownCity = input.baseTownCity.trim(); const ukRegion = input.ukRegion.trim();
   if (baseTownCity.length > 120 || ukRegion.length > 120) return { ok: false, message: "One or more location fields is too long." };
   if (requireComplete && !input.isUkBased) return { ok: false, message: "Confirm that this business is based in the UK before continuing." };
-  if (requireComplete && (!baseTownCity || !ukRegion)) return { ok: false, message: "Add the town or city and county or region where this business is based." };
+  if (requireComplete && !ukRegion) return { ok: false, message: "Add the county or region where this business is based." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
   if (requireComplete && !input.servesLocal && !input.servesUkWide) return { ok: false, message: "Choose at least one area that your business serves." };
   const supabase = await createClient();
