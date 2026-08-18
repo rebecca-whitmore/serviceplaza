@@ -28,7 +28,7 @@
   padding: 0.85rem 1rem;
   border: 0;
   border-radius: 0.6rem;
-  background: linear-gradient(135deg, #3457e5 0%, #607cf0 100%);
+  background: linear-gradient(135deg, #b83d37 0%, #d9564e 100%);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -40,7 +40,7 @@
   margin-bottom: 1.5rem;
   padding: 0.85rem 1rem;
   border-radius: 0.6rem;
-  background: #3457e5;
+  background: #c94740;
   color: #fff;
   text-decoration: none;
 }
@@ -108,9 +108,9 @@
   min-height: 3.25rem;
   margin-top: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #3457e5;
+  border: 1px solid #c94740;
   border-radius: 0.6rem;
-  background: #3457e5;
+  background: #c94740;
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -124,7 +124,7 @@
 
 .secondaryButton {
   background: transparent;
-  color: #3457e5;
+  color: #d74740;
 }
 
 .error {
@@ -138,9 +138,9 @@
   gap: 0.45rem;
   margin: 0 0 1.5rem;
   padding: 1rem 1.1rem;
-  border-left: 4px solid #dfff38;
+  border-left: 4px solid #bfd5ff;
   border-radius: 0.5rem;
-  background: #e8edff;
+  background: #fff0ea;
   line-height: 1.55;
 }
 
