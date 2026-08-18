@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  background: #f1f2f0;
+  background: #eef1f3;
   color: #19201c;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -16,7 +16,10 @@ body {
 }
 
 body {
-  background: #f1f2f0;
+  background:
+    radial-gradient(circle at 8% 0%, rgb(82 106 130 / 14%), transparent 34rem),
+    radial-gradient(circle at 92% 18%, rgb(174 189 202 / 18%), transparent 40rem),
+    linear-gradient(135deg, #f6f7f8 0%, #eef1f3 48%, #f4f2ef 100%);
 }
 
 h1,
