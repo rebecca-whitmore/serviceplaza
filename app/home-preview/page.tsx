@@ -55,11 +55,11 @@ export default function HomePreviewPage() {
       </section>
 
       <section className={styles.ownerCta}>
-        <div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a <FREE></FREE> business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div>
+        <div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a <strong>FREE</strong> business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div>
         <Link href="/login">Register or manage your listing</Link>
       </section>
     </main>
 
-    <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/login">Business account</Link></div></footer>
+    <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
   </div>;
 }
