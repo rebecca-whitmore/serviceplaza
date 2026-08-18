@@ -666,6 +666,8 @@ export type Database = {
       }
     }
     Functions: {
+      admin_remove_published_listing_image: { Args: { target_listing_id: string }; Returns: Json }
+      admin_update_published_listing_image: { Args: { file_byte_size: number | null; file_mime_type: string | null; filename: string | null; image_alt_text: string; new_private_storage_path: string | null; new_public_storage_path: string | null; target_listing_id: string }; Returns: Json }
       admin_remove_pending_application_image: { Args: { target_version_id: string }; Returns: string | null }
       admin_update_pending_application_image: { Args: { file_byte_size: number | null; file_mime_type: string | null; filename: string | null; image_alt_text: string; storage_path: string | null; target_version_id: string }; Returns: string | null }
       admin_edit_pending_application: { Args: { custom_service_names: string[]; edit_payload: Json; edit_reason: string; target_version_id: string }; Returns: undefined }

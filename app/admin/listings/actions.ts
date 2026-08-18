@@ -4,6 +4,46 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/require-admin";
 
+export async function updatePublishedListingImage(formData: FormData) {
+  const listingId = String(formData.get("listingId") ?? ""); const altText = String(formData.get("altText") ?? "").trim();
+  if (!/^[0-9a-f-]{36}$/i.test(listingId) || altText.length > 300) redirect(`/admin/listings/${listingId}?error=image`);
+  const candidate = formData.get("image"); const file = candidate instanceof File && candidate.size ? candidate : null;
+  if (file && (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5_242_880)) redirect(`/admin/listings/${listingId}?error=image`);
+  const { supabase, userId } = await requireAdmin();
+  const { data: listing } = await supabase.from("listings").select("current_published_version_id").eq("id", listingId).maybeSingle();
+  if (!listing?.current_published_version_id) redirect(`/admin/listings/${listingId}?error=image`);
+  let privatePath: string | null = null; let publicPath: string | null = null;
+  if (file) {
+    const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg"; const unique = crypto.randomUUID();
+    privatePath = `${userId}/${listing.current_published_version_id}/admin-${unique}.${extension}`;
+    publicPath = `${listingId}/${listing.current_published_version_id}-admin-${unique}.${extension}`;
+    const { error: privateError } = await supabase.storage.from("listing-images-private").upload(privatePath, file, { contentType: file.type, upsert: false });
+    if (privateError) redirect(`/admin/listings/${listingId}?error=image`);
+    const { error: publicError } = await supabase.storage.from("listing-images-public").upload(publicPath, file, { contentType: file.type, upsert: false });
+    if (publicError) { await supabase.storage.from("listing-images-private").remove([privatePath]); redirect(`/admin/listings/${listingId}?error=image`); }
+  }
+  const { data: oldPaths, error } = await supabase.rpc("admin_update_published_listing_image", {
+    target_listing_id: listingId, new_private_storage_path: privatePath, new_public_storage_path: publicPath,
+    filename: file?.name ?? null, file_mime_type: file?.type ?? null, file_byte_size: file?.size ?? null, image_alt_text: altText,
+  });
+  if (error) { if (privatePath) await supabase.storage.from("listing-images-private").remove([privatePath]); if (publicPath) await supabase.storage.from("listing-images-public").remove([publicPath]); redirect(`/admin/listings/${listingId}?error=image`); }
+  const old = oldPaths && typeof oldPaths === "object" && !Array.isArray(oldPaths) ? oldPaths as { private_path?: string; public_path?: string } : {};
+  if (file && old.private_path && old.private_path !== privatePath) await supabase.storage.from("listing-images-private").remove([old.private_path]);
+  if (file && old.public_path && old.public_path !== publicPath) await supabase.storage.from("listing-images-public").remove([old.public_path]);
+  revalidatePath(`/admin/listings/${listingId}`); revalidatePath(`/business`);
+  redirect(`/admin/listings/${listingId}?notice=image_saved`);
+}
+
+export async function removePublishedListingImage(formData: FormData) {
+  const listingId = String(formData.get("listingId") ?? ""); if (!/^[0-9a-f-]{36}$/i.test(listingId)) redirect("/admin/listings");
+  const { supabase } = await requireAdmin(); const { data: oldPaths, error } = await supabase.rpc("admin_remove_published_listing_image", { target_listing_id: listingId });
+  if (error) redirect(`/admin/listings/${listingId}?error=image`);
+  const old = oldPaths && typeof oldPaths === "object" && !Array.isArray(oldPaths) ? oldPaths as { private_path?: string; public_path?: string } : {};
+  if (old.private_path) await supabase.storage.from("listing-images-private").remove([old.private_path]); if (old.public_path) await supabase.storage.from("listing-images-public").remove([old.public_path]);
+  revalidatePath(`/admin/listings/${listingId}`); revalidatePath(`/business`);
+  redirect(`/admin/listings/${listingId}?notice=image_removed`);
+}
+
 export async function setListingVisibility(formData: FormData) {
   const listingId = String(formData.get("listingId") ?? "");
   const makeVisible = formData.get("makeVisible") === "true";
