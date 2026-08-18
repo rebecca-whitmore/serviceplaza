@@ -28,7 +28,7 @@
   padding: 0.85rem 1rem;
   border: 0;
   border-radius: 0.6rem;
-  background: linear-gradient(135deg, #b83d37 0%, #d9564e 100%);
+  background: linear-gradient(135deg, #4a2954 0%, #744878 100%);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -40,7 +40,7 @@
   margin-bottom: 1.5rem;
   padding: 0.85rem 1rem;
   border-radius: 0.6rem;
-  background: #c94740;
+  background: #6b3d70;
   color: #fff;
   text-decoration: none;
 }
@@ -108,9 +108,9 @@
   min-height: 3.25rem;
   margin-top: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #c94740;
+  border: 1px solid #6b3d70;
   border-radius: 0.6rem;
-  background: #c94740;
+  background: #6b3d70;
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -124,7 +124,7 @@
 
 .secondaryButton {
   background: transparent;
-  color: #d74740;
+  color: #6b3d70;
 }
 
 .error {
@@ -138,12 +138,13 @@
   gap: 0.45rem;
   margin: 0 0 1.5rem;
   padding: 1rem 1.1rem;
-  border-left: 4px solid #bfd5ff;
+  border-left: 4px solid #9b6a9e;
   border-radius: 0.5rem;
-  background: #fff0ea;
+  background: #f1eaf5;
   line-height: 1.55;
 }
 
 .outcome p { margin: 0; }
 .outcomeApproved { border-left-color: #52745f; }
 .outcomeDeclined { border-left-color: #a17167; background: #f8efed; }
+.card{border-color:#ded2e3;background:#fffdfb;box-shadow:0 1.25rem 4rem rgb(53 35 63/8%)}.backLink,.textLink{color:#6b3d70}.eyebrow,.hint{color:#706474}.form input{border-color:#b9acbd;background:#fffdfb;color:#35233f}.form input:focus-visible{outline-color:#c4acd0}

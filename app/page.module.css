@@ -12,7 +12,7 @@
 
 .eyebrow {
   margin-bottom: 1rem;
-  color: #555c58;
+  color: #706474;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -28,7 +28,7 @@
 .summary {
   margin: 1.5rem auto 0;
   max-width: 35rem;
-  color: #343936;
+  color: #594d5e;
   font-size: clamp(1.1rem, 3vw, 1.35rem);
   line-height: 1.6;
 }
@@ -37,8 +37,8 @@
   display: inline-block;
   margin-top: 2rem;
   padding: 0.65rem 1rem;
-  border: 1px solid #cad1cc;
+  border: 1px solid #c4b6c9;
   border-radius: 999px;
-  color: #555c58;
+  color: #6b3d70;
   font-size: 0.9rem;
 }

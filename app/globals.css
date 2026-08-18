@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
-  background: #f2f6f3;
-  color: #19201c;
+  background: #f4edf6;
+  color: #35233f;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -16,7 +16,11 @@ body {
 }
 
 body {
-  background: linear-gradient(145deg, #eef5f1 0%, #f5f5ef 52%, #faf4e9 100%);
+  background:
+    radial-gradient(circle at 12% 8%, rgb(216 200 228 / 55%) 0, transparent 34rem),
+    radial-gradient(circle at 88% 28%, rgb(240 213 224 / 42%) 0, transparent 30rem),
+    linear-gradient(145deg, #f1eaf5 0%, #f8f1f4 52%, #fcf7ef 100%);
+  background-attachment: fixed;
 }
 
 h1,
