@@ -82,6 +82,8 @@ export async function publishListingEdit(formData: FormData) {
   const serviceTagIds = formData.getAll("serviceTagIds").map(String);
   const customServices = value("customServices").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
   const reason = value("reason");
+  const imageCandidate = formData.get("image"); const imageFile = imageCandidate instanceof File && imageCandidate.size ? imageCandidate : null;
+  const removeImage = checked("removeImage"); const imageAltText = value("imageAltText");
   const payload = {
     businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"),
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
@@ -99,9 +101,25 @@ export async function publishListingEdit(formData: FormData) {
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
-  const { supabase } = await requireAdmin();
+  if (imageAltText.length > 300 || (imageFile && (!["image/jpeg", "image/png", "image/webp"].includes(imageFile.type) || imageFile.size > 5_242_880))) redirect(`/admin/listings/${listingId}/edit?error=image`);
+  const { supabase, userId } = await requireAdmin(); let privatePath: string | null = null; let publicPath: string | null = null;
+  if (imageFile) {
+    const extension = imageFile.type === "image/png" ? "png" : imageFile.type === "image/webp" ? "webp" : "jpg"; const unique = crypto.randomUUID();
+    privatePath = `${userId}/admin-edits/${unique}.${extension}`; publicPath = `${listingId}/admin-${unique}.${extension}`;
+    const { error: privateError } = await supabase.storage.from("listing-images-private").upload(privatePath, imageFile, { contentType: imageFile.type, upsert: false });
+    if (privateError) redirect(`/admin/listings/${listingId}/edit?error=image`);
+    const { error: publicError } = await supabase.storage.from("listing-images-public").upload(publicPath, imageFile, { contentType: imageFile.type, upsert: false });
+    if (publicError) { await supabase.storage.from("listing-images-private").remove([privatePath]); redirect(`/admin/listings/${listingId}/edit?error=image`); }
+  }
   const { error } = await supabase.rpc("admin_publish_listing_edit_with_uk", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason, confirm_uk_based: isUkBased, display_base_location: showBaseLocation });
-  if (error) redirect(`/admin/listings/${listingId}/edit?error=save`);
+  if (error) { if (privatePath) await supabase.storage.from("listing-images-private").remove([privatePath]); if (publicPath) await supabase.storage.from("listing-images-public").remove([publicPath]); redirect(`/admin/listings/${listingId}/edit?error=save`); }
+  if (imageFile && privatePath && publicPath) {
+    const { error: imageError } = await supabase.rpc("admin_update_published_listing_image", { target_listing_id: listingId, new_private_storage_path: privatePath, new_public_storage_path: publicPath, filename: imageFile.name, file_mime_type: imageFile.type, file_byte_size: imageFile.size, image_alt_text: imageAltText });
+    if (imageError) { await supabase.storage.from("listing-images-private").remove([privatePath]); await supabase.storage.from("listing-images-public").remove([publicPath]); redirect(`/admin/listings/${listingId}?error=image`); }
+  } else if (removeImage) {
+    const { error: imageError } = await supabase.rpc("admin_remove_published_listing_image", { target_listing_id: listingId });
+    if (imageError) redirect(`/admin/listings/${listingId}?error=image`);
+  }
   revalidatePath("/admin/listings"); revalidatePath(`/admin/listings/${listingId}`); revalidatePath("/account");
   redirect(`/admin/listings/${listingId}?notice=edited`);
 }
