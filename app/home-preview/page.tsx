@@ -24,9 +24,9 @@ export default function HomePreviewPage() {
     <main>
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>Independent services, closer to home</p>
-          <h1>Find the right UK business for you.</h1>
-          <p className={styles.heroIntro}>Service Plaza brings together trusted, independent UK businesses offering professional, practical and personal services—all in one welcoming place.</p>
+          <p className={styles.eyebrow}>Independent services</p>
+          <h1>Find the perfect professional for you.</h1>
+          <p className={styles.heroIntro}>Service Plaza brings together trusted, independent UK businesses offering professional, practical and personal services, all in one welcoming place.</p>
           <div className={styles.actions}><Link className={styles.primaryAction} href="/businesses">Browse the directory <span aria-hidden="true">→</span></Link><a className={styles.textAction} href="#about">Discover what makes us different</a></div>
         </div>
         <div className={styles.heroVisual} aria-label="A selection of the types of businesses found on Service Plaza">
@@ -55,7 +55,7 @@ export default function HomePreviewPage() {
       </section>
 
       <section className={styles.ownerCta}>
-        <div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div>
+        <div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a <FREE></FREE> business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div>
         <Link href="/login">Register or manage your listing</Link>
       </section>
     </main>
