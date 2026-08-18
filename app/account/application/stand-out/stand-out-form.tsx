@@ -11,13 +11,36 @@ import styles from "../application.module.css";
 type Values = Omit<StandOutDetails, "versionId">;
 type InitialImage = { path: string; filename: string; previewUrl: string; displayPublicly: boolean; altText: string } | null;
 
+const plazaPerkPrompt = `Using everything I have already told you about my business and ideal customers in this conversation, help me create a suitable "Plaza Perk" for my Service Plaza listing.
+
+A Plaza Perk is an exclusive benefit for people who discover my business through Service Plaza. It does not have to be a discount. It could be a free consultation or taster, a useful add-on or upgrade, a guide or resource, a small gift, priority booking, or another valuable benefit.
+
+The Perk should:
+- be genuinely useful and relevant to my ideal customers
+- complement my usual services
+- feel worthwhile without being difficult or unsustainable for my business to provide
+- be clear, specific and easy to claim
+- avoid exaggerated promises or misleading wording
+
+First, ask me any essential questions you still need answered, including what I can sustainably offer and whether I want an expiry date or limits. Ask one question at a time and do not invent details.
+
+Then suggest five varied Plaza Perk ideas and briefly explain why each could appeal to my customers. Help me choose and refine one. Once I am happy, provide final copy under these exact headings:
+
+Perk title (maximum 160 characters)
+What the Perk includes
+How it can be claimed
+Conditions (if needed)
+Suggested expiry date (if appropriate)
+
+Keep the final wording warm, clear and concise. Remind me to check that the offer, terms and availability are accurate and sustainable before publishing it.`;
+
 function readDimensions(file: File): Promise<{ width: number; height: number; previewUrl: string }> {
   return new Promise((resolve, reject) => { const previewUrl = URL.createObjectURL(file); const image = new Image(); image.onload = () => resolve({ width: image.naturalWidth, height: image.naturalHeight, previewUrl }); image.onerror = () => { URL.revokeObjectURL(previewUrl); reject(new Error("Invalid image")); }; image.src = previewUrl; });
 }
 
 export function StandOutForm({ versionId, userId, initialValues, initialImage }: { versionId: string; userId: string; initialValues: Values; initialImage: InitialImage }) {
   const router = useRouter(); const [values, setValues] = useState(initialValues); const [image, setImage] = useState(initialImage);
-  const [status, setStatus] = useState("Your progress is saved privately."); const [hasError, setHasError] = useState(false); const [uploading, setUploading] = useState(false);
+  const [status, setStatus] = useState("Your progress is saved privately."); const [hasError, setHasError] = useState(false); const [uploading, setUploading] = useState(false); const [copyStatus, setCopyStatus] = useState("Copy prompt");
   const changed = useRef(false); const latest = useRef(values); const chain = useRef<Promise<void>>(Promise.resolve());
   useEffect(() => { latest.current = values; }, [values]);
   const queueSave = useCallback((snapshot: Values, continueAfter = false) => {
@@ -61,6 +84,11 @@ export function StandOutForm({ versionId, userId, initialValues, initialImage }:
     setImage(null); update({ displayImagePublicly: true, imageAltText: "" }); setStatus("Image removed. A placeholder will be used."); setUploading(false);
   }
 
+  async function copyPerkPrompt() {
+    try { await navigator.clipboard.writeText(plazaPerkPrompt); setCopyStatus("Prompt copied"); window.setTimeout(() => setCopyStatus("Copy prompt"), 2500); }
+    catch { setCopyStatus("Select and copy the prompt below"); }
+  }
+
   return <form className={styles.form} onSubmit={(event) => { event.preventDefault(); if (!uploading) queueSave(latest.current, true); }}>
     <fieldset className={styles.fieldset}><legend>Logo or profile image <span>(optional)</span></legend><p className={styles.hint}>For best results, use a square image—ideally 1200 × 1200 px and at least 600 × 600 px. JPG, PNG and WebP files up to 5MB are accepted; other proportions may be cropped.</p><p className={styles.imageFallback}>If no image is available right now, we will use a placeholder image. You can update your listing at any time.</p>
       <div className={styles.imagePanel}>{image ? <div className={styles.imagePreview}><img src={image.previewUrl} alt={values.imageAltText || "Current business image preview"} /><div><strong>{image.filename}</strong><span>Private draft image</span></div></div> : <div className={styles.imageEmpty}><strong>No image added yet</strong><span>Your image remains private while your application is a draft.</span></div>}
@@ -70,7 +98,7 @@ export function StandOutForm({ versionId, userId, initialValues, initialImage }:
     </fieldset>
 
     <div className={styles.formDivider} />
-    <fieldset className={styles.fieldset}><legend>Plaza Perk <span>(optional but recommended)</span></legend><aside className={styles.perkIntro}><strong>Give visitors an extra reason to choose you</strong><p>A Plaza Perk is a special offer or added benefit available through your Service Plaza listing. It can help your business stand out, but it is entirely optional.</p></aside>
+    <fieldset className={styles.fieldset}><legend>Plaza Perk <span>(optional but recommended)</span></legend><aside className={styles.perkIntro}><strong>Give visitors an extra reason to choose you</strong><p>Your Plaza Perk is a special benefit offered to Service Plaza visitors. It does not have to be a discount; it could be a useful extra that adds value.</p><details className={styles.perkIdeas}><summary><strong>Toggle for ideas</strong></summary><div><p>For example:</p><ul><li>A percentage or fixed-price discount</li><li>A free consultation, taster session or trial</li><li>A complimentary add-on or upgrade</li><li>A free guide, resource or small gift</li><li>Priority booking or another exclusive benefit</li></ul><p>Choose something relevant to your customers and sustainable for your business. Include any code, expiry date or terms they need to claim it.</p><details className={styles.perkAiPrompt}><summary><strong>If you used AI for your business descriptions, open a follow-on prompt.</strong></summary><div className={styles.aiHelperContent}><p>Continue in the same AI conversation so it can use the business context you already provided.</p><p className={styles.aiCaution}>Always check that the suggested benefit, wording, availability and conditions are accurate and sustainable before publishing it.</p><button type="button" onClick={() => void copyPerkPrompt()}>{copyStatus}</button><pre tabIndex={0}>{plazaPerkPrompt}</pre></div></details></div></details></aside>
       <label className={styles.perkToggle}><input type="checkbox" checked={values.hasPlazaPerk} onChange={(event) => update({ hasPlazaPerk: event.target.checked, ...(!event.target.checked ? { perkTitle: "", perkDescription: "", perkRedemption: "", perkConditions: "", perkExpiresOn: "" } : {}) })} /><span><strong>I’d like to add a Plaza Perk</strong><small>You can change or remove it later by submitting an update.</small></span></label>
     </fieldset>
     {values.hasPlazaPerk ? <div className={styles.perkFields}>
