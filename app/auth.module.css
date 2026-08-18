@@ -28,7 +28,7 @@
   padding: 0.85rem 1rem;
   border: 0;
   border-radius: 0.6rem;
-  background: #24372c;
+  background: linear-gradient(135deg, #30445a 0%, #526a82 100%);
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -40,7 +40,7 @@
   margin-bottom: 1.5rem;
   padding: 0.85rem 1rem;
   border-radius: 0.6rem;
-  background: #24372c;
+  background: #30445a;
   color: #fff;
   text-decoration: none;
 }
@@ -99,7 +99,7 @@
 }
 
 .form input:focus-visible {
-  outline: 3px solid #a9c9b6;
+  outline: 3px solid #aebdca;
   outline-offset: 2px;
 }
 
@@ -108,9 +108,9 @@
   min-height: 3.25rem;
   margin-top: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #24372c;
+  border: 1px solid #30445a;
   border-radius: 0.6rem;
-  background: #24372c;
+  background: #30445a;
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -124,7 +124,7 @@
 
 .secondaryButton {
   background: transparent;
-  color: #24372c;
+  color: #30445a;
 }
 
 .error {
@@ -138,9 +138,9 @@
   gap: 0.45rem;
   margin: 0 0 1.5rem;
   padding: 1rem 1.1rem;
-  border-left: 4px solid #8ba393;
+  border-left: 4px solid #62778c;
   border-radius: 0.5rem;
-  background: #eef5f1;
+  background: #e5eaf0;
   line-height: 1.55;
 }
 
