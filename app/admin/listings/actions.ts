@@ -72,6 +72,25 @@ export async function setWebsiteOpportunity(formData: FormData) {
   redirect(`/admin/listings/${listingId}?notice=${opportunity ? "opportunity_added" : "opportunity_removed"}`);
 }
 
+export async function releaseOwnerDraft(formData: FormData) {
+  const listingId = String(formData.get("listingId") ?? "");
+  const reason = String(formData.get("reason") ?? "").trim();
+  const confirmed = formData.get("confirmRelease") === "on";
+  if (!/^[0-9a-f-]{36}$/i.test(listingId) || !confirmed || !reason || reason.length > 2000) {
+    redirect(`/admin/listings/${listingId}?error=draft_release`);
+  }
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.rpc("admin_release_owner_draft", {
+    target_listing_id: listingId,
+    administrator_reason: reason,
+  });
+  if (error) redirect(`/admin/listings/${listingId}?error=draft_release`);
+  revalidatePath("/admin/listings");
+  revalidatePath(`/admin/listings/${listingId}`);
+  revalidatePath("/account");
+  redirect(`/admin/listings/${listingId}/edit?notice=draft_released`);
+}
+
 export async function publishListingEdit(formData: FormData) {
   const listingId = String(formData.get("listingId") ?? "");
   const value = (name: string) => String(formData.get(name) ?? "").trim();

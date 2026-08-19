@@ -38,7 +38,7 @@ export default async function AccountPage({
   if (business) {
     const { data: listing } = await supabase
       .from("listings")
-      .select("id")
+      .select("id, current_published_version_id")
       .eq("business_id", business.id)
       .maybeSingle();
 
@@ -47,16 +47,27 @@ export default async function AccountPage({
         .from("listing_versions")
         .select("id, status")
         .eq("listing_id", listing.id)
+        .in("status", ["draft", "pending", "changes_requested"])
         .order("version_number", { ascending: false })
         .limit(1)
         .maybeSingle();
-      activeVersion = version;
-      if (version?.status === "approved" || version?.status === "declined") {
+      if (version) {
+        activeVersion = version;
+      } else if (listing.current_published_version_id) {
+        const { data: publishedVersion } = await supabase
+          .from("listing_versions")
+          .select("id, status")
+          .eq("id", listing.current_published_version_id)
+          .maybeSingle();
+        activeVersion = publishedVersion;
+      }
+      const outcomeVersion = activeVersion;
+      if (outcomeVersion?.status === "approved" || outcomeVersion?.status === "declined") {
         const { data: reviewOutcome } = await supabase
           .from("business_review_events")
           .select("event_type, applicant_message")
-          .eq("listing_version_id", version.id)
-          .eq("event_type", version.status)
+          .eq("listing_version_id", outcomeVersion.id)
+          .eq("event_type", outcomeVersion.status)
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle();
