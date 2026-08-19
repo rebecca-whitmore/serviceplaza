@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./listing.module.css";
 
-export function BusinessTabs({ businessName, fullDescription, founderStory }: { businessName: string; fullDescription: string; founderStory: string | null }) {
+export function BusinessTabs({ businessName, fullDescription, founderStory }: { businessName: string | null; fullDescription: string | null; founderStory: string | null }) {
   const [activeTab, setActiveTab] = useState<"business" | "founder">("business");
   const hasFounderStory = founderStory && founderStory.trim().length > 0;
 
@@ -20,7 +20,7 @@ export function BusinessTabs({ businessName, fullDescription, founderStory }: { 
     </div>
 
     {activeTab === "business" ? <div role="tabpanel">
-      <h2>About {businessName}</h2>
+      <h2>About {businessName ?? "this business"}</h2>
       <div className={styles.longCopy}>{fullDescription?.split(/\n+/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
     </div> : null}
 

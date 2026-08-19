@@ -645,6 +645,7 @@ export type Database = {
           base_town_city: string | null
           business_name: string | null
           full_description: string | null
+          founder_story: string | null
           has_plaza_perk: boolean | null
           is_uk_based: boolean | null
           id: string | null
