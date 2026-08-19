@@ -294,6 +294,7 @@ export type Database = {
           decided_at: string | null
           declaration_accepted_at: string | null
           full_description: string
+          founder_story: string | null
           has_plaza_perk: boolean
           is_uk_based: boolean
           id: string
@@ -336,6 +337,7 @@ export type Database = {
           decided_at?: string | null
           declaration_accepted_at?: string | null
           full_description?: string
+          founder_story?: string | null
           has_plaza_perk?: boolean
           is_uk_based?: boolean
           id?: string
@@ -378,6 +380,7 @@ export type Database = {
           decided_at?: string | null
           declaration_accepted_at?: string | null
           full_description?: string
+          founder_story?: string | null
           has_plaza_perk?: boolean
           is_uk_based?: boolean
           id?: string

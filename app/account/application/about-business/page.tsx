@@ -12,11 +12,11 @@ export default async function AboutBusinessPage() {
   if (!business) redirect("/account");
   const { data: listing } = await supabase.from("listings").select("id").eq("business_id", business.id).maybeSingle();
   if (!listing) redirect("/account");
-  const { data: draft } = await supabase.from("listing_versions").select("id, short_summary, full_description").eq("listing_id", listing.id).eq("status", "draft").maybeSingle();
+  const { data: draft } = await supabase.from("listing_versions").select("id, short_summary, full_description, founder_story").eq("listing_id", listing.id).eq("status", "draft").maybeSingle();
   if (!draft) redirect("/account");
 
   return <><header className={styles.header}><div><h1>About your business</h1></div></header>
     <p className={styles.intro}>Give prospective customers a clear, welcoming introduction to your business and the value you provide.</p>
-    <AboutBusinessForm versionId={draft.id} aiPrompt={aiListingPrompt} initialValues={{ shortSummary: draft.short_summary, fullDescription: draft.full_description }} />
+    <AboutBusinessForm versionId={draft.id} aiPrompt={aiListingPrompt} initialValues={{ shortSummary: draft.short_summary, fullDescription: draft.full_description, founderStory: draft.founder_story || "" }} />
   </>;
 }
