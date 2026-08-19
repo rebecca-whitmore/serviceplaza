@@ -49,7 +49,7 @@ export async function editPendingApplication(formData: FormData) {
   const services = value("customServices").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
   const reason = value("reason");
   const payload = {
-    businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"),
+    businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"), founderStory: value("founderStory"),
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
     publicPhone: value("publicPhone"), showPublicPhone: checked("showPublicPhone"), websiteUrl: value("websiteUrl"),
     socialLinks: Object.fromEntries(["instagram", "facebook", "linkedin", "tiktok", "youtube"].map((name) => [name, value(name)]).filter(([, url]) => url)),
@@ -57,7 +57,7 @@ export async function editPendingApplication(formData: FormData) {
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
-  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !reason || !payload.isUkBased
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !reason || !payload.isUkBased
     || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && !payload.baseTownCity && !payload.ukRegion)
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/applications/${versionId}/edit?error=incomplete`);
@@ -65,6 +65,8 @@ export async function editPendingApplication(formData: FormData) {
   const { supabase } = await requireAdmin();
   const { error } = await supabase.rpc("admin_edit_pending_application", { target_version_id: versionId, edit_payload: payload, custom_service_names: services, edit_reason: reason });
   if (error) redirect(`/admin/applications/${versionId}/edit?error=save`);
+  const { error: founderError } = await supabase.from("listing_versions").update({ founder_story: payload.founderStory || null }).eq("id", versionId).eq("status", "pending");
+  if (founderError) redirect(`/admin/applications/${versionId}/edit?error=save`);
   revalidatePath("/admin"); revalidatePath(`/admin/applications/${versionId}`);
   redirect(`/admin/applications/${versionId}?notice=edited`);
 }

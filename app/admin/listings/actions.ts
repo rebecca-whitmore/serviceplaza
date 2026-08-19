@@ -85,7 +85,7 @@ export async function publishListingEdit(formData: FormData) {
   const imageCandidate = formData.get("image"); const imageFile = imageCandidate instanceof File && imageCandidate.size ? imageCandidate : null;
   const removeImage = checked("removeImage"); const imageAltText = value("imageAltText");
   const payload = {
-    businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"),
+    businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"), founderStory: value("founderStory"),
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
     publicPhone: value("publicPhone"), showPublicPhone: checked("showPublicPhone"), websiteUrl: value("websiteUrl"),
     socialLinks: Object.fromEntries(["instagram", "facebook", "linkedin", "tiktok", "youtube"].map((name) => [name, value(name)]).filter(([, url]) => url)),
@@ -95,7 +95,7 @@ export async function publishListingEdit(formData: FormData) {
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
   const isUkBased = checked("isUkBased"); const showBaseLocation = payload.offersInPerson && Boolean(payload.baseTownCity || payload.ukRegion);
-  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
     || (!payload.offersOnline && !payload.offersInPerson)
     || (payload.offersInPerson && !payload.baseTownCity && !payload.ukRegion)
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
@@ -111,8 +111,9 @@ export async function publishListingEdit(formData: FormData) {
     const { error: publicError } = await supabase.storage.from("listing-images-public").upload(publicPath, imageFile, { contentType: imageFile.type, upsert: false });
     if (publicError) { await supabase.storage.from("listing-images-private").remove([privatePath]); redirect(`/admin/listings/${listingId}/edit?error=image`); }
   }
-  const { error } = await supabase.rpc("admin_publish_listing_edit_with_uk", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason, confirm_uk_based: isUkBased, display_base_location: showBaseLocation });
+  const { data: newVersionId, error } = await supabase.rpc("admin_publish_listing_edit_with_uk", { target_listing_id: listingId, edit_payload: payload, primary_category_id: primaryCategoryId, additional_category_ids: additionalCategoryIds, selected_service_tag_ids: serviceTagIds, custom_service_names: customServices, edit_reason: reason, confirm_uk_based: isUkBased, display_base_location: showBaseLocation });
   if (error) { if (privatePath) await supabase.storage.from("listing-images-private").remove([privatePath]); if (publicPath) await supabase.storage.from("listing-images-public").remove([publicPath]); redirect(`/admin/listings/${listingId}/edit?error=save`); }
+  if (newVersionId) await supabase.from("listing_versions").update({ founder_story: payload.founderStory || null }).eq("id", newVersionId);
   if (imageFile && privatePath && publicPath) {
     const { error: imageError } = await supabase.rpc("admin_update_published_listing_image", { target_listing_id: listingId, new_private_storage_path: privatePath, new_public_storage_path: publicPath, filename: imageFile.name, file_mime_type: imageFile.type, file_byte_size: imageFile.size, image_alt_text: imageAltText });
     if (imageError) { await supabase.storage.from("listing-images-private").remove([privatePath]); await supabase.storage.from("listing-images-public").remove([publicPath]); redirect(`/admin/listings/${listingId}?error=image`); }
