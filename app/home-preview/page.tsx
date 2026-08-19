@@ -25,11 +25,11 @@ export default function HomePreviewPage() {
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>Look around. Take your time.</p>
-          <h1>Find someone you feel good about choosing.</h1>
+          <h1>Find a business you feel good about choosing.</h1>
           <h2 className={styles.heroSubheading}>Because when the outcome matters to you, the person behind it matters too.</h2>
           <div className={styles.heroIntro}>
             <p>Some things are too personal, important or expensive to leave to whoever appears first on Google. Whether you&apos;re looking for help with your health, your home, your plans or your next chapter, you want to know who you&apos;re dealing with before you get in touch.</p>
-            <p>Service Plaza helps you discover independent UK professionals as people, not just names on a list. Read about them, get a feel for how they work and decide who feels right for you. No account. No phone number. No one chasing you because you had a look.</p>
+            <p>Service Plaza helps you discover independent UK professionals as people, not just names on a list. Read about them, get a feel for how they work and decide who feels right for you, before choosing who you want to connect with.</p>
           </div>
           <div className={styles.actions}><Link className={styles.primaryAction} href="/businesses">Browse the directory <span aria-hidden="true">→</span></Link><a className={styles.textAction} href="#about">Discover what makes us different</a></div>
         </div>
