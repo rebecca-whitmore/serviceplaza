@@ -15,7 +15,7 @@ const values = [
 ];
 
 export default function HomePreviewPage() {
-  return <div className={styles.page}>
+  return <div className={styles.page} id="top">
     <header className={styles.header}>
       <Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link>
       <nav aria-label="Main navigation"><Link href="/businesses">Browse businesses</Link><Link className={styles.ownerLink} href="/login">List your business</Link></nav>
@@ -40,7 +40,7 @@ export default function HomePreviewPage() {
         </div>
       </section>
 
-      <section className={styles.introStrip} aria-label="Service Plaza introduction"><p>One directory.</p><p>Many specialists.</p><p>All UK-based.</p></section>
+      <section className={styles.introStrip} aria-label="Service Plaza introduction"><p>Independent professionals.</p><p>Meaningful work.</p><p>UK-wide locations.</p></section>
 
       <section className={styles.about} id="about">
         <div><p className={styles.eyebrow}>A better place to begin</p><h2>Great services should be easier to discover.</h2></div>
@@ -64,5 +64,6 @@ export default function HomePreviewPage() {
     </main>
 
     <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
+    <a className={styles.scrollTop} href="#top" aria-label="Back to the top of the page"><span aria-hidden="true">↑</span> Back to top</a>
   </div>;
 }
