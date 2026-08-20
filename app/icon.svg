@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#f7f7f3"/>
+  <path d="M32 6 58 32 32 58 6 32Z" fill="#20272b" stroke="#b89760" stroke-width="2"/>
+  <path d="M32 11 53 32 32 53 11 32Z" fill="none" stroke="#dfcda7" stroke-opacity=".28"/>
+  <text x="32" y="37" fill="#dfcda7" font-family="Georgia, serif" font-size="16" text-anchor="middle">SP</text>
+</svg>

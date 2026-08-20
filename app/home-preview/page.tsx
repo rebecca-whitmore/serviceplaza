@@ -36,7 +36,7 @@ export default function HomePreviewPage() {
           <div className={`${styles.serviceCard} ${styles.cardOne}`}><span>Marketing &amp; PR</span><strong>Find specialists who help your business get seen.</strong></div>
           <div className={`${styles.serviceCard} ${styles.cardTwo}`}><span>Health &amp; Wellbeing</span><strong>Explore support designed around real people.</strong></div>
           <div className={`${styles.serviceCard} ${styles.cardThree}`}><span>Web &amp; Digital</span><strong>Meet UK experts who make technology feel simpler.</strong></div>
-          <div className={styles.visualMark}><span>SP</span><small>UK-based businesses</small></div>
+          <div className={styles.visualMark}><div><span>SP</span><small>Independent<br/>UK businesses</small></div></div>
         </div>
       </section>
 
@@ -64,6 +64,6 @@ export default function HomePreviewPage() {
     </main>
 
     <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span><i>SP</i></span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
-    <a className={styles.scrollTop} href="#top" aria-label="Back to the top of the page"><span aria-hidden="true">↑</span> Back to top</a>
+    <a className={styles.scrollTop} href="#top" aria-label="Back to the top of the page"><span aria-hidden="true">↑</span></a>
   </div>;
 }
