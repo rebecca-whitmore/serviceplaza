@@ -9,3 +9,5 @@
 .emailIssue button { border: 0; border-radius: 999px; background: #6b3d70; color: #fff; padding: .65rem 1rem; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 
 @media (max-width: 44rem) { .emailIssue { align-items: flex-start; flex-direction: column; } }
+
+.emailIssues{border-color:#c98780;border-radius:.35rem;background:#fff;box-shadow:0 .65rem 1.75rem rgb(32 39 43/5%)}.emailIssues>header{border-bottom-color:#e5cbc7;background:#f8e9e6}.emailIssues h2{font-family:"Newsreader",Georgia,serif;font-weight:500}.emailIssue{border-bottom-color:#ead8d5}.emailIssue button{border:1px solid #20272b;border-radius:.2rem;background:#20272b;color:#fff}

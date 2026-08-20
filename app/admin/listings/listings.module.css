@@ -28,3 +28,5 @@
 .noWebsite { background: #ecefed; color: #505b55; }
 .websiteOpportunity { background: #f7ebca; color: #725b1e; }
 @media (max-width: 48rem) { .header { align-items: flex-start; flex-direction: column; } .summary { grid-template-columns: 1fr; } }
+
+.header h1,.panel h2{font-family:"Newsreader",Georgia,serif;font-weight:500;letter-spacing:-.02em}.summary>*,.panel{border-color:#cfd2d0;border-radius:.35rem;background:#fff;box-shadow:0 .65rem 1.75rem rgb(32 39 43/5%)}.panel header,.tableWrap thead{background:#f7f5ef}.tableWrap th,.tableWrap td{border-color:#e0e3e1}.tableWrap tbody tr:hover{background:#faf8f2}.panel a{color:#4f3e20;text-underline-offset:.2em}.published,.hidden,.noWebsite,.websiteOpportunity{border-radius:.2rem}
