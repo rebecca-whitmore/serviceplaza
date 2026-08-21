@@ -9,7 +9,16 @@ export type DirectoryListing = PublicListing & {
   serviceTags: string[];
   services: string[];
   imageUrl: string | null;
+  distanceMiles?: number;
+  locationMatch?: string;
 };
+
+export async function loadPostcodeMatches(latitude: number, longitude: number, radiusMiles: number) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("search_published_listings_by_postcode", { search_latitude: latitude, search_longitude: longitude, visitor_radius_miles: radiusMiles });
+  if (error) return null;
+  return new Map((data ?? []).map((row) => [row.version_id, { distanceMiles: Number(row.distance_miles), locationMatch: row.match_kind }]));
+}
 
 type TaxonomyItem = { name: string; slug?: string };
 function item(value: unknown): TaxonomyItem | null { return value && typeof value === "object" && typeof (value as TaxonomyItem).name === "string" ? value as TaxonomyItem : null; }

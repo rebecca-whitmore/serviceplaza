@@ -286,6 +286,7 @@ export type Database = {
       listing_versions: {
         Row: {
           base_town_city: string | null
+          business_postcode: string | null
           business_name: string
           category_help_requested: boolean
           category_help_text: string | null
@@ -301,6 +302,10 @@ export type Database = {
           listing_id: string
           offers_in_person: boolean
           offers_online: boolean
+          in_person_mode: string | null
+          in_person_nationwide: boolean
+          postcode_latitude: number | null
+          postcode_longitude: number | null
           perk_conditions: string | null
           perk_description: string | null
           perk_expires_on: string | null
@@ -322,6 +327,7 @@ export type Database = {
           submitted_at: string | null
           supersedes_version_id: string | null
           terms_version: string | null
+          travel_radius_miles: number | null
           uk_region: string | null
           updated_at: string
           version_number: number
@@ -329,6 +335,7 @@ export type Database = {
         }
         Insert: {
           base_town_city?: string | null
+          business_postcode?: string | null
           business_name?: string
           category_help_requested?: boolean
           category_help_text?: string | null
@@ -344,6 +351,10 @@ export type Database = {
           listing_id: string
           offers_in_person?: boolean
           offers_online?: boolean
+          in_person_mode?: string | null
+          in_person_nationwide?: boolean
+          postcode_latitude?: number | null
+          postcode_longitude?: number | null
           perk_conditions?: string | null
           perk_description?: string | null
           perk_expires_on?: string | null
@@ -365,6 +376,7 @@ export type Database = {
           submitted_at?: string | null
           supersedes_version_id?: string | null
           terms_version?: string | null
+          travel_radius_miles?: number | null
           uk_region?: string | null
           updated_at?: string
           version_number: number
@@ -372,6 +384,7 @@ export type Database = {
         }
         Update: {
           base_town_city?: string | null
+          business_postcode?: string | null
           business_name?: string
           category_help_requested?: boolean
           category_help_text?: string | null
@@ -387,6 +400,10 @@ export type Database = {
           listing_id?: string
           offers_in_person?: boolean
           offers_online?: boolean
+          in_person_mode?: string | null
+          in_person_nationwide?: boolean
+          postcode_latitude?: number | null
+          postcode_longitude?: number | null
           perk_conditions?: string | null
           perk_description?: string | null
           perk_expires_on?: string | null
@@ -408,6 +425,7 @@ export type Database = {
           submitted_at?: string | null
           supersedes_version_id?: string | null
           terms_version?: string | null
+          travel_radius_miles?: number | null
           uk_region?: string | null
           updated_at?: string
           version_number?: number
@@ -651,6 +669,8 @@ export type Database = {
           id: string | null
           offers_in_person: boolean | null
           offers_online: boolean | null
+          in_person_mode: string | null
+          in_person_nationwide: boolean | null
           perk_conditions: string | null
           perk_description: string | null
           perk_expires_on: string | null
@@ -666,6 +686,7 @@ export type Database = {
           short_summary: string | null
           slug: string | null
           social_links: Json | null
+          travel_radius_miles: number | null
           uk_region: string | null
           version_id: string | null
           website_url: string | null
@@ -674,6 +695,7 @@ export type Database = {
       }
     }
     Functions: {
+      search_published_listings_by_postcode: { Args: { search_latitude: number; search_longitude: number; visitor_radius_miles?: number }; Returns: { version_id: string; distance_miles: number; match_kind: string }[] }
       admin_release_owner_draft: { Args: { administrator_reason: string; target_listing_id: string }; Returns: string }
       admin_remove_published_listing_image: { Args: { target_listing_id: string }; Returns: Json }
       admin_update_published_listing_image: { Args: { file_byte_size: number | null; file_mime_type: string | null; filename: string | null; image_alt_text: string; new_private_storage_path: string | null; new_public_storage_path: string | null; target_listing_id: string }; Returns: Json }

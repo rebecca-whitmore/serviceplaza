@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { sendApplicationNotification, type ApplicationNotificationType } from "@/lib/email/application-notifications";
+import { isCoverageMiles, lookupUkPostcode } from "@/lib/uk-postcodes";
 
 export type AdminDecision = "approve" | "request_changes" | "decline";
 export type DecisionResult = { ok: true } | { ok: false; message: string };
@@ -48,6 +49,8 @@ export async function editPendingApplication(formData: FormData) {
   if (!/^[0-9a-f-]{36}$/i.test(versionId)) redirect("/admin?error=edit");
   const services = value("customServices").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
   const reason = value("reason");
+  const inPersonMode = value("inPersonMode"); const travelRadiusMiles = Number(value("travelRadiusMiles") || 30);
+  const businessPostcode = value("businessPostcode"); const inPersonNationwide = checked("inPersonNationwide");
   const payload = {
     businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"), founderStory: value("founderStory"),
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
@@ -57,15 +60,21 @@ export async function editPendingApplication(formData: FormData) {
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
+  const geocodedPostcode = payload.offersInPerson ? await lookupUkPostcode(businessPostcode) : null;
   if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !reason || !payload.isUkBased
-    || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && !payload.baseTownCity && !payload.ukRegion)
+    || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && (!geocodedPostcode || !["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/applications/${versionId}/edit?error=incomplete`);
   if (services.length > 15 || services.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/applications/${versionId}/edit?error=limits`);
   const { supabase } = await requireAdmin();
   const { error } = await supabase.rpc("admin_edit_pending_application", { target_version_id: versionId, edit_payload: payload, custom_service_names: services, edit_reason: reason });
   if (error) redirect(`/admin/applications/${versionId}/edit?error=save`);
-  const { error: founderError } = await supabase.from("listing_versions").update({ founder_story: payload.founderStory || null }).eq("id", versionId).eq("status", "pending");
+  const { error: founderError } = await supabase.from("listing_versions").update({ founder_story: payload.founderStory || null,
+    business_postcode: geocodedPostcode?.postcode ?? null, postcode_latitude: geocodedPostcode?.latitude ?? null, postcode_longitude: geocodedPostcode?.longitude ?? null,
+    base_town_city: geocodedPostcode?.publicArea ?? null, uk_region: geocodedPostcode?.publicRegion ?? null,
+    in_person_mode: payload.offersInPerson ? inPersonMode : null, travel_radius_miles: payload.offersInPerson && inPersonMode !== "customers_visit" ? travelRadiusMiles : null,
+    in_person_nationwide: payload.offersInPerson && inPersonMode !== "customers_visit" && inPersonNationwide,
+  }).eq("id", versionId).eq("status", "pending");
   if (founderError) redirect(`/admin/applications/${versionId}/edit?error=save`);
   revalidatePath("/admin"); revalidatePath(`/admin/applications/${versionId}`);
   redirect(`/admin/applications/${versionId}?notice=edited`);

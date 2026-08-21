@@ -1,6 +1,7 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
 import { sendApplicationNotification } from "@/lib/email/application-notifications";
+import { isCoverageMiles, lookupUkPostcode } from "@/lib/uk-postcodes";
 
 export type BusinessBasics = { versionId: string; businessName: string; shortSummary: string; fullDescription: string };
 export type SaveResult = { ok: true } | { ok: false; message: string };
@@ -18,7 +19,9 @@ export type AboutBusiness = { versionId: string; shortSummary: string; fullDescr
 export type HowYouWork = {
   versionId: string; isUkBased: boolean; showBaseLocation: boolean;
   offersOnline: boolean; offersInPerson: boolean; servesLocal: boolean; servesUkWide: boolean;
-  baseTownCity: string; ukRegion: string;
+  baseTownCity: string; ukRegion: string; businessPostcode: string;
+  inPersonMode: "travels_to_customer" | "customers_visit" | "both" | "";
+  travelRadiusMiles: number; inPersonNationwide: boolean;
 };
 export type StandOutDetails = {
   versionId: string; displayImagePublicly: boolean; imageAltText: string; hasPlazaPerk: boolean;
@@ -128,19 +131,24 @@ export async function saveAboutBusiness(input: AboutBusiness, requireComplete = 
 
 export async function saveHowYouWork(input: HowYouWork, requireComplete = false): Promise<SaveResult> {
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
-  const baseTownCity = input.baseTownCity.trim(); const ukRegion = input.ukRegion.trim();
-  if (baseTownCity.length > 120 || ukRegion.length > 120) return { ok: false, message: "One or more location fields is too long." };
   if (requireComplete && !input.isUkBased) return { ok: false, message: "Confirm that this business is based in the UK before continuing." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
-  if (requireComplete && input.offersInPerson && !baseTownCity && !ukRegion) return { ok: false, message: "Add a base town or city, a county or region, or both for in-person services." };
+  if (requireComplete && input.offersInPerson && !input.inPersonMode) return { ok: false, message: "Choose whether you travel to customers, customers visit you, or both." };
+  if (input.offersInPerson && !isCoverageMiles(Number(input.travelRadiusMiles))) return { ok: false, message: "Choose a valid travel distance." };
+  const postcode = input.offersInPerson && input.businessPostcode.trim() ? await lookupUkPostcode(input.businessPostcode) : null;
+  if (requireComplete && input.offersInPerson && !postcode) return { ok: false, message: "Enter a complete, valid UK postcode. It will be kept private." };
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
   const { data, error } = await supabase.from("listing_versions").update({
-    is_uk_based: input.isUkBased, show_base_location: input.offersInPerson && Boolean(baseTownCity || ukRegion),
+    is_uk_based: input.isUkBased, show_base_location: input.offersInPerson,
     offers_online: input.offersOnline, offers_in_person: input.offersInPerson,
-    serves_local: input.offersInPerson, serves_uk_wide: input.offersOnline,
-    base_town_city: input.offersInPerson ? baseTownCity || null : null, uk_region: input.offersInPerson ? ukRegion || null : null,
+    serves_local: input.offersInPerson, serves_uk_wide: input.offersOnline || input.inPersonNationwide,
+    base_town_city: postcode?.publicArea ?? null, uk_region: postcode?.publicRegion ?? null,
+    business_postcode: postcode?.postcode ?? (input.offersInPerson ? input.businessPostcode.trim().toUpperCase() || null : null), postcode_latitude: postcode?.latitude ?? null,
+    postcode_longitude: postcode?.longitude ?? null, in_person_mode: input.offersInPerson ? input.inPersonMode : null,
+    travel_radius_miles: input.offersInPerson && input.inPersonMode !== "customers_visit" ? Number(input.travelRadiusMiles) : null,
+    in_person_nationwide: input.offersInPerson && input.inPersonMode !== "customers_visit" && input.inPersonNationwide,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
   return { ok: true };
