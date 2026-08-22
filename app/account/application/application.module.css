@@ -42,4 +42,3 @@
 @media(max-width:38rem){.main{padding:1.5rem .8rem 5rem}.accountBar{margin:0 0 1.5rem;padding:0}}
 
 .accountBar .backLink{border:0;background:transparent;box-shadow:none}
-.communicationNotice{padding:1rem;border-left:4px solid var(--ui-gold);background:#f8f4ea;color:#403a2e;line-height:1.55}.communicationNotice p{margin:.35rem 0}.communicationNotice small{color:#5d584d}
