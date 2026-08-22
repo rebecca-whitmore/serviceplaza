@@ -24,11 +24,21 @@ Typical duration: Session-based or limited-duration persistent cookies required 
 
 Consent: These cookies are necessary to provide sign-in and account functionality requested by the user and cannot be disabled through a Service Plaza preference control.
 
-3. Analytics, advertising and targeting cookies
+3. Planned analytics, advertising and targeting technologies
 
-Service Plaza does not currently use Google Analytics, Google AdSense, Hotjar, behavioural advertising cookies or retargeting cookies on the Website.
+Service Plaza plans to use Google Analytics to understand how visitors find and use the Website. Google Analytics may collect information such as pages viewed, approximate location derived from IP address, device and browser information, referral source and interactions with Website features. We will use this information to measure performance and improve the Website.
 
-If we introduce analytics, advertising or other non-essential cookies in the future, we will update this policy and, where required, ask for consent before those technologies are set or accessed.
+We may also use Meta advertising technologies, including the Meta Pixel, to measure advertising performance, build audiences and show more relevant advertisements on Meta services such as Facebook and Instagram. These technologies may connect Website activity with information held by Meta where the visitor has a Meta account.
+
+Google Analytics and Meta advertising technologies are not active unless and until they are implemented. When enabled, they will be treated as non-essential. They will not be loaded, nor allowed to store or access information on a device, unless the visitor has made the relevant choice through our cookie consent control.
+
+Cookie category: Analytics (Google Analytics) and advertising/targeting (Meta).
+
+Purpose: Website measurement, service improvement, advertising measurement and, where separately selected, audience building and relevant advertising.
+
+Providers: Google and Meta. Their exact cookies, identifiers and durations depend on the services and configuration in use. We will keep the consent information and cookie details shown on the Website updated when these services are enabled.
+
+Consent: Optional. Visitors will be able to accept or reject these categories and later withdraw consent. Withdrawing consent will prevent future optional tracking on that device, although it does not automatically erase information already lawfully processed by a provider.
 
 4. Website links and third parties
 
@@ -38,7 +48,7 @@ Our server may record that a Website visitor selected an outbound business websi
 
 5. Managing cookies
 
-You can use your browser settings to view, delete or block cookies. Blocking strictly necessary authentication cookies may prevent you from signing in, remaining signed in, saving an application or using protected account functions.
+You can use the Website's cookie preference control, once non-essential technologies are enabled, to accept, reject or change optional cookie choices. You can also use your browser settings to view, delete or block cookies. Blocking strictly necessary authentication cookies may prevent you from signing in, remaining signed in, saving an application or using protected account functions.
 
 Browser controls vary by provider and device. Refer to your browser’s help pages for current instructions.
 

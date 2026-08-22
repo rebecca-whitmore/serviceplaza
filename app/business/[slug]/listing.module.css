@@ -15,4 +15,4 @@
 @media(max-width:42rem){.hero{padding-top:2.5rem}.hero h1{font-size:3.7rem}.sidebar,.services,.detailGrid{grid-template-columns:1fr}.perkJump{display:block;margin:1rem 0 0}.tabButtons{flex-direction:column}.tabButton{border-right:0;border-bottom:1px solid var(--line)}.explore::after{right:-2rem}.footerLinks{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.tabButton::after{transition:none}}
 
-.page footer{background:radial-gradient(circle at 78% 20%,rgb(255 255 255/4%),transparent 24rem),#1b2225}
+.page footer{background:#1b2225}

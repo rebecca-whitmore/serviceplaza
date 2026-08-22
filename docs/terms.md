@@ -106,6 +106,12 @@ You can contact us at admin@serviceplaza.co.uk.
 
 9.2. Business Users must ensure that any personal data they include in a Listing is provided lawfully and with any necessary permission.
 
+9.3. We may send Business Users essential administrative and service communications about applications, accounts, Listings, security and service requests. These are separate from marketing communications.
+
+9.4. The weekly Service Plaza Briefing forms part of the business Listing service. By submitting an application, a Business User agrees that we may add their account email address to the Briefing, which contains Service Plaza news and information, ideas and opportunities relating to running, marketing and promoting an independent business.
+
+9.5. Each edition will provide a way to unsubscribe. Unsubscribing from the Briefing does not prevent essential administrative or requested-service communications.
+
 10. Suspension and termination
 
 10.1. You may stop using the Website at any time. A Business User may ask us to close an account or remove a Listing by contacting admin@serviceplaza.co.uk, subject to information we must retain for legal, security or audit purposes.

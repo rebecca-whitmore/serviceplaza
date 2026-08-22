@@ -34,6 +34,16 @@ Communications
 
 We collect information you provide when you email us, make a complaint, report content, request support or exercise a data protection right.
 
+Marketing preferences
+
+The Service Plaza Briefing is included as part of the business Listing service. Business Users are told before submitting an application that their contact email will be added to the weekly Briefing, which contains Service Plaza news and information, ideas and opportunities relating to running, marketing and promoting an independent business.
+
+The Briefing is separate from emails needed to administer an application, account, Listing, security matter or a service request initiated by the user.
+
+Analytics and advertising data
+
+If you consent after these tools are enabled, Google Analytics may process Website usage, device, browser, referral, approximate-location and interaction information. If you separately consent to advertising technologies, Meta may process identifiers and Website interactions for advertising measurement, audience building and relevant advertising. We will not load these non-essential technologies before the relevant consent choice.
+
 2. How we collect personal data
 
 We collect personal data directly from you when you complete a form, create an account, submit content, edit a Listing, enter a search postcode or communicate with us.
@@ -50,13 +60,16 @@ We use personal data to:
 - validate UK postcodes and calculate location-based directory results;
 - operate search, categories, contact links and Plaza Perks;
 - send application, review, approval, change-request and account-related emails;
+- send The Service Plaza Briefing to Business Users as part of the Listing service, manage unsubscribe requests and retain a minimal suppression record so that we respect them;
 - answer questions, investigate complaints and respond to reports;
 - prevent fraud, abuse, unauthorised access and security incidents;
 - maintain audit records and protect the integrity of the approval process;
 - understand technical performance and improve the Website; and
 - comply with legal obligations and establish, exercise or defend legal claims.
 
-Our lawful bases may include performance of a contract or taking steps at your request before entering a contract, our legitimate interests in operating and protecting a useful UK business directory, compliance with legal obligations, and consent where the law requires it. Where we rely on legitimate interests, we consider the impact on your rights and interests.
+Our lawful bases may include performance of a contract or taking steps at your request before entering a contract, our legitimate interests in operating and protecting a useful UK business directory, compliance with legal obligations, and consent where the law requires it. We rely on consent for optional analytics and advertising technologies. Where we rely on legitimate interests, including communications forming part of the Listing service where permitted, we consider the impact on your rights and interests.
+
+You can unsubscribe from The Service Plaza Briefing at any time using the link in an email or by contacting us. Unsubscribing from marketing does not stop essential service communications about your account, application, Listing, security or a service request you have asked us to handle.
 
 4. Public information and contact with Professionals
 
@@ -71,7 +84,10 @@ We share personal data only where reasonably necessary for the purposes describe
 - Supabase, which provides database, authentication and file-storage services;
 - Vercel and related infrastructure providers used to host and deliver the Website;
 - Resend, used to deliver transactional application and account emails;
+- the email platform used to deliver The Service Plaza Briefing to Business Users;
 - Postcodes.io, used to validate postcodes and obtain geographic information for matching;
+- Google, if Google Analytics is enabled and the visitor consents;
+- Meta, if Meta advertising technologies are enabled and the visitor consents;
 - professional advisers, insurers, auditors and consultants;
 - law-enforcement bodies, regulators, courts or public authorities where disclosure is required or permitted by law; and
 - a purchaser, investor or successor in connection with a genuine business sale, reorganisation or transfer, subject to appropriate safeguards.
@@ -121,7 +137,7 @@ Business accounts and applications are intended only for people aged 18 or over.
 
 11. Cookies
 
-We use cookies and similar technologies as explained in our Cookies Policy at https://serviceplaza.co.uk/cookie-policy.
+We use cookies and similar technologies as explained in our Cookies Policy at https://serviceplaza.co.uk/cookie-policy. Planned Google Analytics and Meta advertising technologies will remain inactive until implemented with the required consent controls.
 
 12. Changes to this policy
 
