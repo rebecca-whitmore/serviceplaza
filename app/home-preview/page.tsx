@@ -54,12 +54,10 @@ export default function HomePreviewPage() {
 
       <section className={styles.directoryCta}>
         <div><p className={styles.eyebrow}>Ready to explore?</p><h2>Your next trusted specialist could be one click away.</h2></div>
-        <Link className={styles.lightAction} href="/businesses">Find a business <span aria-hidden="true">→</span></Link>
-      </section>
-
-      <section className={styles.findServiceCta}>
-        <div><p className={styles.eyebrow}>Need a helping hand?</p><h2>Can’t see what you’re looking for?</h2><p>Tell Service Plaza what you need and we will help look for suitable independent UK professionals. It is a free service, and we aim to respond within 24 hours.</p></div>
-        <Link href="/find-a-service">Ask us to help you find it <span aria-hidden="true">→</span></Link>
+        <div className={styles.directoryActions}>
+          <Link className={styles.lightAction} href="/businesses">Find a business <span aria-hidden="true">→</span></Link>
+          <div className={styles.findServiceNote}><p>Can’t see what you need?</p><Link href="/find-a-service">Ask us to help you find it <span aria-hidden="true">→</span></Link></div>
+        </div>
       </section>
 
       <section className={styles.ownerCta}>
