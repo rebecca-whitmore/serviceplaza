@@ -38,6 +38,12 @@ You can contact us at admin@serviceplaza.co.uk.
 
 2.5. We may add, alter, suspend or withdraw Website features where reasonably necessary. We do not guarantee that the Website or every Listing will always be available or uninterrupted.
 
+2.6. Find a Service is a free search-assistance service. A Customer may tell us what they need and we will review the request and look for potentially suitable independent UK Professionals. We aim to respond within 24 hours, but this is a target rather than a guaranteed response time.
+
+2.7. We may contact the Customer to clarify a request before searching. We will speak with the Customer before sharing their request or contact details with a Professional.
+
+2.8. We do not guarantee that we will identify a suitable Professional, that any Professional will be available, or that an introduction will result in an agreement. Find a Service does not change the responsibilities or limitations in these Terms, and Service Plaza does not become a party to any agreement between a Customer and Professional.
+
 3. Customer responsibilities
 
 3.1. You are responsible for deciding whether a Professional is suitable for your needs and whether to contact or engage them.
@@ -47,6 +53,8 @@ You can contact us at admin@serviceplaza.co.uk.
 3.3. You are responsible for agreeing the scope, price, timing and other terms of any services directly with the Professional.
 
 3.4. You must provide accurate information when communicating with us and must not misuse the Website or interfere with another person’s use of it.
+
+3.5. If you submit a Find a Service request, you must provide enough accurate information for us to understand it. You remain responsible for assessing any Professional we identify and deciding whether to contact or appoint them.
 
 4. Business listings and accounts
 

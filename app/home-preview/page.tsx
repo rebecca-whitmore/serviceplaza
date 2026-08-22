@@ -18,7 +18,7 @@ export default function HomePreviewPage() {
   return <div className={styles.page} id="top">
     <header className={styles.header}>
       <Link className={styles.brand} href="/home-preview"><span><i>SP</i></span><strong>Service Plaza</strong></Link>
-      <nav aria-label="Main navigation"><Link href="/businesses">Browse businesses</Link><Link className={styles.ownerLink} href="/login">List your business</Link></nav>
+      <nav aria-label="Main navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link className={styles.ownerLink} href="/login">List your business</Link></nav>
     </header>
 
     <main>
@@ -57,13 +57,18 @@ export default function HomePreviewPage() {
         <Link className={styles.lightAction} href="/businesses">Find a business <span aria-hidden="true">→</span></Link>
       </section>
 
+      <section className={styles.findServiceCta}>
+        <div><p className={styles.eyebrow}>Need a helping hand?</p><h2>Can’t see what you’re looking for?</h2><p>Tell Service Plaza what you need and we will help look for suitable independent UK professionals. It is a free service, and we aim to respond within 24 hours.</p></div>
+        <Link href="/find-a-service">Ask us to help you find it <span aria-hidden="true">→</span></Link>
+      </section>
+
       <section className={styles.ownerCta}>
         <div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a <strong>FREE</strong> business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div>
         <Link href="/login">Register or manage your listing</Link>
       </section>
     </main>
 
-    <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span><i>SP</i></span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
+    <footer className={styles.footer}><Link className={styles.brand} href="/home-preview"><span><i>SP</i></span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
     <a className={styles.scrollTop} href="#top" aria-label="Back to the top of the page"><span aria-hidden="true">↑</span></a>
   </div>;
 }

@@ -34,6 +34,10 @@ Communications
 
 We collect information you provide when you email us, make a complaint, report content, request support or exercise a data protection right.
 
+Find a Service requests
+
+If you ask us to help find a service, we collect your name, email address, contact number, postcode or location, the service you need, preferred timeframe and contact method, and any budget, requirements or other information you choose to provide. We may contact you to clarify the request before beginning our search.
+
 Marketing preferences
 
 The Service Plaza Briefing is included as part of the business Listing service. Business Users are told before submitting an application that their contact email will be added to the weekly Briefing, which contains Service Plaza news and information, ideas and opportunities relating to running, marketing and promoting an independent business.
@@ -62,6 +66,7 @@ We use personal data to:
 - send application, review, approval, change-request and account-related emails;
 - send The Service Plaza Briefing to Business Users as part of the Listing service, manage unsubscribe requests and retain a minimal suppression record so that we respect them;
 - answer questions, investigate complaints and respond to reports;
+- review and respond to Find a Service requests, clarify what a Customer needs and research potentially suitable Professionals;
 - prevent fraud, abuse, unauthorised access and security incidents;
 - maintain audit records and protect the integrity of the approval process;
 - understand technical performance and improve the Website; and
@@ -75,7 +80,9 @@ You can unsubscribe from The Service Plaza Briefing at any time using the link i
 
 Service Plaza is a public directory. Information marked for public display can be seen by anyone and may be indexed by search engines or copied outside our control.
 
-Customers contact Professionals using the contact methods selected by the Professional, including an external website, email address, telephone number or social link. Service Plaza does not currently provide an internal customer messaging or lead-selling service and does not provide a visitor’s contact details to Professionals merely because the visitor viewed or searched the directory.
+Customers can contact Professionals using the contact methods selected by the Professional, including an external website, email address, telephone number or social link. Customers may also submit a private Find a Service request to Service Plaza.
+
+We review Find a Service requests ourselves and may contact the Customer for clarification. We do not automatically circulate requests or provide a visitor’s details to Professionals merely because the visitor viewed or searched the directory. We will speak with the Customer before sharing their request or contact details with a potentially suitable Professional.
 
 5. Who we share personal data with
 
