@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { sendApplicationNotification, type ApplicationNotificationType } from "@/lib/email/application-notifications";
+import { addApprovedBusinessToMailerLite } from "@/lib/email/mailerlite";
 import { isCoverageMiles, lookupUkPostcode } from "@/lib/uk-postcodes";
 
 export type AdminDecision = "approve" | "request_changes" | "decline";
@@ -114,6 +115,24 @@ export async function decideApplication(input: { versionId: string; decision: Ad
     approve: "approved", request_changes: "changes_requested", decline: "declined",
   };
   await sendApplicationNotification(supabase, input.versionId, notificationType[input.decision]);
+  if (input.decision === "approve") {
+    const { data: approvedVersion } = await supabase.from("listing_versions")
+      .select("business_name, listings!inner(businesses!inner(contact_name, contact_email))")
+      .eq("id", input.versionId).maybeSingle();
+    const listingRelation = approvedVersion?.listings;
+    const listing = Array.isArray(listingRelation) ? listingRelation[0] : listingRelation;
+    const businessRelation = listing?.businesses;
+    const business = Array.isArray(businessRelation) ? businessRelation[0] : businessRelation;
+    if (approvedVersion && business) {
+      await addApprovedBusinessToMailerLite({
+        fullName: business.contact_name,
+        email: business.contact_email,
+        company: approvedVersion.business_name,
+      });
+    } else {
+      console.error("MailerLite subscriber sync skipped: approved business details could not be loaded.");
+    }
+  }
   revalidatePath("/admin"); revalidatePath(`/admin/applications/${input.versionId}`); revalidatePath("/account");
   return { ok: true };
 }
