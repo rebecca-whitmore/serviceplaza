@@ -46,7 +46,7 @@ The Briefing is separate from emails needed to administer an application, accoun
 
 Analytics and advertising data
 
-If you consent after these tools are enabled, Google Analytics may process Website usage, device, browser, referral, approximate-location and interaction information. If you separately consent to advertising technologies, Meta may process identifiers and Website interactions for advertising measurement, audience building and relevant advertising. We will not load these non-essential technologies before the relevant consent choice.
+If you consent, Google Analytics may process Website usage, device, browser, referral, approximate-location and interaction information. If you separately consent to advertising technologies after they are enabled, Meta may process identifiers and Website interactions for advertising measurement, audience building and relevant advertising. We will not load these non-essential technologies before the relevant consent choice.
 
 2. How we collect personal data
 
@@ -144,7 +144,7 @@ Business accounts and applications are intended only for people aged 18 or over.
 
 11. Cookies
 
-We use cookies and similar technologies as explained in our Cookies Policy at https://serviceplaza.co.uk/cookie-policy. Planned Google Analytics and Meta advertising technologies will remain inactive until implemented with the required consent controls.
+We use cookies and similar technologies as explained in our Cookies Policy at https://serviceplaza.co.uk/cookie-policy. Google Analytics remains inactive unless the visitor accepts analytics cookies. Planned Meta advertising technologies will remain inactive until implemented with the required consent controls.
 
 12. Changes to this policy
 
