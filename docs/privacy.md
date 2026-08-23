@@ -46,7 +46,7 @@ The Briefing is separate from emails needed to administer an application, accoun
 
 Analytics and advertising data
 
-If you consent, Google Analytics may process Website usage, device, browser, referral, approximate-location and interaction information. If you separately consent to advertising technologies after they are enabled, Meta may process identifiers and Website interactions for advertising measurement, audience building and relevant advertising. We will not load these non-essential technologies before the relevant consent choice.
+If you consent, Google Tag Manager may load Google Analytics, which may process Website usage, device, browser, referral, approximate-location and interaction information. If you separately consent to advertising technologies after they are enabled, Meta may process identifiers and Website interactions for advertising measurement, audience building and relevant advertising. We will not load these non-essential technologies before the relevant consent choice.
 
 2. How we collect personal data
 

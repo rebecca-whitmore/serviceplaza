@@ -26,7 +26,7 @@ Consent: These cookies are necessary to provide sign-in and account functionalit
 
 3. Analytics, advertising and targeting technologies
 
-Service Plaza uses Google Analytics, with the visitor's permission, to understand how visitors find and use the Website. Google Analytics may collect information such as pages viewed, approximate location derived from IP address, device and browser information, referral source and interactions with Website features. We use this information to measure performance and improve the Website.
+Service Plaza uses Google Tag Manager to deploy Google Analytics, with the visitor's permission, and understand how visitors find and use the Website. Google Analytics may collect information such as pages viewed, approximate location derived from IP address, device and browser information, referral source and interactions with Website features. We use this information to measure performance and improve the Website.
 
 We may also use Meta advertising technologies, including the Meta Pixel, to measure advertising performance, build audiences and show more relevant advertisements on Meta services such as Facebook and Instagram. These technologies may connect Website activity with information held by Meta where the visitor has a Meta account.
 
@@ -36,7 +36,7 @@ Cookie category: Analytics (Google Analytics) and advertising/targeting (Meta).
 
 Purpose: Website measurement, service improvement, advertising measurement and, where separately selected, audience building and relevant advertising.
 
-Providers: Google and, if enabled later, Meta. Their exact cookies, identifiers and durations depend on the services and configuration in use. Google Analytics commonly uses cookies beginning with `_ga` to distinguish visitors and sessions. We will keep the consent information and cookie details shown on the Website updated when these services change.
+Providers: Google Tag Manager and Google Analytics, and, if enabled later, Meta. Their exact cookies, identifiers and durations depend on the services and configuration in use. Google Analytics commonly uses cookies beginning with `_ga` to distinguish visitors and sessions. We will keep the consent information and cookie details shown on the Website updated when these services change.
 
 Consent: Optional. Visitors will be able to accept or reject these categories and later withdraw consent. Withdrawing consent will prevent future optional tracking on that device, although it does not automatically erase information already lawfully processed by a provider.
 

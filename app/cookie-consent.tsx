@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./cookie-consent.module.css";
 
 const CONSENT_KEY = "service-plaza-cookie-consent";
-const MEASUREMENT_ID = "G-EWY1ESPG0B";
 
 type Consent = "accepted" | "rejected" | null;
 
@@ -16,6 +15,7 @@ export function CookieConsent() {
   const [consent, setConsent] = useState<Consent>(null);
   const [ready, setReady] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const previousPath = useRef(pathname);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(CONSENT_KEY);
@@ -28,24 +28,27 @@ export function CookieConsent() {
   }, []);
 
   useEffect(() => {
-    if (consent !== "accepted" || typeof window.gtag !== "function") return;
-    window.gtag("config", MEASUREMENT_ID, { page_path: pathname });
+    if (consent !== "accepted" || previousPath.current === pathname) return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "virtual_page_view", page_path: pathname });
+    previousPath.current = pathname;
   }, [consent, pathname]);
 
   function choose(nextConsent: Exclude<Consent, null>) {
+    const wasAccepted = consent === "accepted";
     window.localStorage.setItem(CONSENT_KEY, nextConsent);
     setAnalyticsDisabled(nextConsent !== "accepted");
     if (nextConsent === "rejected") removeAnalyticsCookies();
     setConsent(nextConsent);
     setSettingsOpen(false);
+    if (wasAccepted && nextConsent === "rejected") window.location.reload();
   }
 
   const showPanel = ready && (consent === null || settingsOpen);
 
   return <>
     {consent === "accepted" ? <>
-      <Script async src={"https://www.googletagmanager.com/gtag/js?id=" + MEASUREMENT_ID} strategy="afterInteractive" />
-      <Script id="service-plaza-google-analytics" strategy="afterInteractive">{"window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','G-EWY1ESPG0B',{page_path:window.location.pathname});"}</Script>
+      <Script id="service-plaza-google-tag-manager" strategy="afterInteractive">{"(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-T84QPCHG');"}</Script>
     </> : null}
 
     {showPanel ? <section className={styles.panel} aria-label="Cookie preferences" role="dialog" aria-modal="true">
@@ -74,7 +77,6 @@ function removeAnalyticsCookies() {
 declare global {
   interface Window {
     dataLayer: unknown[];
-    gtag?: (...args: unknown[]) => void;
     "ga-disable-G-EWY1ESPG0B"?: boolean;
   }
 }
