@@ -38,6 +38,10 @@ Find a Service requests
 
 If you ask us to help find a service, we collect your name, email address, contact number, postcode or location, the service you need, preferred timeframe and contact method, and any budget, requirements or other information you choose to provide. We may contact you to clarify the request before beginning our search.
 
+Listing enquiries
+
+If you use the enquiry form on a public Listing, we collect your name, email address, optional contact number, preferred contact method, message and the time you accepted the privacy notice. We send these details to the listed business so that it can respond to you directly, and retain a secure record of the enquiry and its delivery status. To prevent spam and abuse, we also temporarily use a one-way, hashed version of your IP address for rate limiting; we do not store the raw IP address with the enquiry.
+
 Marketing preferences
 
 The Service Plaza Briefing is included as part of the business Listing service. Business Users are told before submitting an application that their contact email will be added to the weekly Briefing, which contains Service Plaza news and information, ideas and opportunities relating to running, marketing and promoting an independent business.
@@ -63,6 +67,8 @@ We use personal data to:
 - display the public information chosen by Business Users;
 - validate UK postcodes and calculate location-based directory results;
 - operate search, categories, contact links and Plaza Perks;
+- deliver Listing enquiries to the Professional selected by the Customer and keep a record of delivery;
+- measure clicks on Listing website, email, telephone and social contact links;
 - send application, review, approval, change-request and account-related emails;
 - send The Service Plaza Briefing to Business Users as part of the Listing service, manage unsubscribe requests and retain a minimal suppression record so that we respect them;
 - answer questions, investigate complaints and respond to reports;
@@ -80,7 +86,7 @@ You can unsubscribe from The Service Plaza Briefing at any time using the link i
 
 Service Plaza is a public directory. Information marked for public display can be seen by anyone and may be indexed by search engines or copied outside our control.
 
-Customers can contact Professionals using the contact methods selected by the Professional, including an external website, email address, telephone number or social link. Customers may also submit a private Find a Service request to Service Plaza.
+Customers can contact Professionals using a private enquiry form or the contact methods selected by the Professional, including an external website, email address, telephone number or social link. Information submitted through a Listing enquiry form is shared with that Professional, stored by Service Plaza and used by the Professional to respond directly. Service Plaza does not manage or monitor the Professional’s response.
 
 We review Find a Service requests ourselves and may contact the Customer for clarification. We do not automatically circulate requests or provide a visitor’s details to Professionals merely because the visitor viewed or searched the directory. We will speak with the Customer before sharing their request or contact details with a potentially suitable Professional.
 
@@ -90,7 +96,8 @@ We share personal data only where reasonably necessary for the purposes describe
 
 - Supabase, which provides database, authentication and file-storage services;
 - Vercel and related infrastructure providers used to host and deliver the Website;
-- Resend, used to deliver transactional application and account emails;
+- Resend, used to deliver transactional application, account and Listing enquiry emails;
+- listed Professionals, when a Customer chooses to send them a Listing enquiry;
 - the email platform used to deliver The Service Plaza Briefing to Business Users;
 - Postcodes.io, used to validate postcodes and obtain geographic information for matching;
 - Google, if Google Analytics is enabled and the visitor consents;
@@ -150,4 +157,4 @@ We use cookies and similar technologies as explained in our Cookies Policy at ht
 
 We may update this Privacy Policy to reflect changes to the Website, our service providers or legal requirements. The latest version will be published on this page with an updated date.
 
-Last updated: 22 August 2026.
+Last updated: 25 August 2026.

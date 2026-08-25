@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      listing_enquiries: {
+        Row: { id: string; listing_id: string; listing_version_id: string; sender_name: string; sender_email: string; sender_phone: string | null; preferred_contact: string; message: string; privacy_accepted_at: string; ip_hash: string; delivery_email: string; delivery_status: string; provider_message_id: string | null; delivery_error: string | null; sent_at: string | null; created_at: string; updated_at: string }
+        Insert: { id?: string; listing_id: string; listing_version_id: string; sender_name: string; sender_email: string; sender_phone?: string | null; preferred_contact: string; message: string; privacy_accepted_at: string; ip_hash: string; delivery_email: string; delivery_status?: string; provider_message_id?: string | null; delivery_error?: string | null; sent_at?: string | null; created_at?: string; updated_at?: string }
+        Update: { delivery_status?: string; provider_message_id?: string | null; delivery_error?: string | null; sent_at?: string | null; updated_at?: string }
+        Relationships: []
+      }
       listing_internal_flags: {
         Row: { created_at: string; listing_id: string; updated_at: string; updated_by_user_id: string; website_opportunity: boolean }
         Insert: { created_at?: string; listing_id: string; updated_at?: string; updated_by_user_id: string; website_opportunity?: boolean }
