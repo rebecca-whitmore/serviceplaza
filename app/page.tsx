@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import styles from "./home-preview/home-preview.module.css";
+import styles from "./home.module.css";
 
 export const metadata: Metadata = {
   title: "Service Plaza | Find Independent UK Professionals",
