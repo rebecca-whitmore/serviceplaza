@@ -56,7 +56,7 @@ export function CookieConsent() {
       <div className={styles.actions}><button type="button" className={styles.reject} onClick={() => choose("rejected")}>Reject analytics</button><button type="button" className={styles.accept} onClick={() => choose("accepted")}>Accept analytics</button></div>
     </section> : null}
 
-    {ready && !showPanel ? <button className={styles.settings} type="button" onClick={() => setSettingsOpen(true)} aria-label="Change cookie preferences">Cookie settings</button> : null}
+    {ready && !showPanel && pathname === "/cookie-policy" ? <button className={styles.settings} type="button" onClick={() => setSettingsOpen(true)} aria-label="Change cookie preferences">Change cookie preferences</button> : null}
   </>;
 }
 

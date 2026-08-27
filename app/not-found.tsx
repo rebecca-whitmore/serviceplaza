@@ -7,8 +7,8 @@ export default function NotFound() {
     <section className={styles.content}>
       <div className={styles.copy}>
         <p className={styles.eyebrow}>Page not found · 404</p>
-        <h1>This isn’t the place you were looking for.</h1>
-        <p>The page may have moved, the address may be incomplete, or the listing may no longer be available. Let’s take you somewhere useful.</p>
+        <h1>UH OH. This page can't be found.</h1>
+        <p>Let’s take you somewhere useful.</p>
         <div className={styles.actions}><Link className={styles.primary} href="/">Return to the homepage <span aria-hidden="true">→</span></Link><Link className={styles.secondary} href="/businesses">Browse the directory</Link></div>
       </div>
       <div className={styles.art} aria-hidden="true"><div className={styles.orbit}/><div className={styles.diamond}><span>404</span><small>Service Plaza</small></div><i/><i/><i/></div>
