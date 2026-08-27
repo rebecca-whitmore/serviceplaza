@@ -25,7 +25,7 @@ export default function HomePage() {
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>Look around. Take your time.</p>
           <h1>Find a business you feel good about choosing.</h1>
-          <h2 className={styles.heroSubheading}>Because when the outcome matters to you, the person behind it matters too.</h2>
+          <h2 className={styles.heroSubheading}>Because when the outcome matters to you, the person behind the business matters too.</h2>
           <div className={styles.heroIntro}><p>Some things are too personal, important or expensive to leave to a faceless brand. Whether it&apos;s your health, your home, your money or your next chapter, Service Plaza helps you discover independent UK professionals who are as invested in getting it right as you are.</p></div>
           <div className={styles.actions}><Link className={styles.primaryAction} href="/businesses">Browse the directory <span aria-hidden="true">→</span></Link><a className={styles.textAction} href="#about">Discover what makes us different</a></div>
         </div>
