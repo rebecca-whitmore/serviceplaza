@@ -17,9 +17,9 @@ const steps = [
 
 export default function FindAServicePage() {
   return <div className={styles.page}>
-    <header className={styles.siteHeader}><Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link><nav><Link href="/businesses">Browse businesses</Link><Link className={styles.active} href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
+    <header className={styles.siteHeader}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav><Link href="/businesses">Browse businesses</Link><Link className={styles.active} href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
     <main>
-      <div className={styles.breadcrumb}><Link href="/home-preview">Service Plaza</Link><span>/</span><span>Find a service</span></div>
+      <div className={styles.breadcrumb}><Link href="/">Service Plaza</Link><span>/</span><span>Find a service</span></div>
       <section className={styles.hero}>
         <div><p className={styles.eyebrow}>A personal search service</p><h1>Can’t see what you’re looking for?</h1><p className={styles.lead}>Tell us what you need and Service Plaza will help look for suitable independent UK professionals.</p></div>
         <aside><span>Free to use</span><h2>A helping hand, without the endless searching.</h2><p>There is no charge to ask us for help. We aim to respond within 24 hours, although more specialist requests may take a little longer to research.</p></aside>
@@ -36,6 +36,6 @@ export default function FindAServicePage() {
         <ServiceRequestForm />
       </section>
     </main>
-    <footer><Link className={styles.brand} href="/home-preview"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><nav aria-label="Footer navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a></nav></footer>
+    <footer><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><nav aria-label="Footer navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a></nav></footer>
   </div>;
 }
