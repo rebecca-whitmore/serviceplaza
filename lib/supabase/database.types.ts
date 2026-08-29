@@ -310,6 +310,8 @@ export type Database = {
           offers_online: boolean
           in_person_mode: string | null
           in_person_nationwide: boolean
+          public_visit_address: string | null
+          public_visit_address_confirmed: boolean
           postcode_latitude: number | null
           postcode_longitude: number | null
           perk_conditions: string | null
@@ -359,6 +361,8 @@ export type Database = {
           offers_online?: boolean
           in_person_mode?: string | null
           in_person_nationwide?: boolean
+          public_visit_address?: string | null
+          public_visit_address_confirmed?: boolean
           postcode_latitude?: number | null
           postcode_longitude?: number | null
           perk_conditions?: string | null
@@ -408,6 +412,8 @@ export type Database = {
           offers_online?: boolean
           in_person_mode?: string | null
           in_person_nationwide?: boolean
+          public_visit_address?: string | null
+          public_visit_address_confirmed?: boolean
           postcode_latitude?: number | null
           postcode_longitude?: number | null
           perk_conditions?: string | null
@@ -677,6 +683,8 @@ export type Database = {
           offers_online: boolean | null
           in_person_mode: string | null
           in_person_nationwide: boolean | null
+          public_visit_address: string | null
+          public_visit_address_confirmed: boolean | null
           perk_conditions: string | null
           perk_description: string | null
           perk_expires_on: string | null

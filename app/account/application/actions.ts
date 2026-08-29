@@ -21,7 +21,7 @@ export type HowYouWork = {
   offersOnline: boolean; offersInPerson: boolean; servesLocal: boolean; servesUkWide: boolean;
   baseTownCity: string; ukRegion: string; businessPostcode: string;
   inPersonMode: "travels_to_customer" | "customers_visit" | "both" | "";
-  travelRadiusMiles: number; inPersonNationwide: boolean;
+  travelRadiusMiles: number; inPersonNationwide: boolean; publicVisitAddress: string; publicVisitAddressConfirmed: boolean;
 };
 export type StandOutDetails = {
   versionId: string; displayImagePublicly: boolean; imageAltText: string; hasPlazaPerk: boolean;
@@ -133,6 +133,9 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
   if (requireComplete && input.offersInPerson && !input.inPersonMode) return { ok: false, message: "Choose whether you travel to customers, customers visit you, or both." };
+  const customersVisit = input.offersInPerson && ["customers_visit", "both"].includes(input.inPersonMode);
+  if (input.publicVisitAddress.length > 500) return { ok: false, message: "Enter the public customer address using no more than 500 characters." };
+  if (requireComplete && customersVisit && (!input.publicVisitAddress.trim() || !input.publicVisitAddressConfirmed)) return { ok: false, message: "Add the full customer address and confirm that it may be displayed publicly." };
   if (input.offersInPerson && !isCoverageMiles(Number(input.travelRadiusMiles))) return { ok: false, message: "Choose a valid travel distance." };
   const postcode = input.businessPostcode.trim() ? await lookupUkPostcode(input.businessPostcode) : null;
   if (requireComplete && !postcode) return { ok: false, message: "Enter a complete, valid UK business base postcode. It will be kept private." };
@@ -148,6 +151,8 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
     postcode_longitude: postcode?.longitude ?? null, in_person_mode: input.offersInPerson ? input.inPersonMode || null : null,
     travel_radius_miles: input.offersInPerson && input.inPersonMode !== "customers_visit" ? Number(input.travelRadiusMiles) : null,
     in_person_nationwide: input.offersInPerson && input.inPersonMode !== "customers_visit" && input.inPersonNationwide,
+    public_visit_address: customersVisit ? input.publicVisitAddress.trim() || null : null,
+    public_visit_address_confirmed: customersVisit && input.publicVisitAddressConfirmed,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
   return { ok: true };

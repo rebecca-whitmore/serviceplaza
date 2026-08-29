@@ -20,11 +20,11 @@ Location information
 
 If you apply for a Listing, we collect the business-base postcode you provide so that we can verify the business is UK-based and help visitors discover businesses based near them, including online-only businesses. If you offer in-person services, we also collect your in-person working arrangement, travel radius or nationwide travel selection. We convert the postcode into geographic coordinates and a broader public area for location matching.
 
-The full business postcode and its precise coordinates are treated as private matching information. We do not display them publicly through the directory. We may display a broader area, such as the outward postcode area and local authority area.
+The business-base postcode and its precise coordinates are treated as private matching information. We do not display them publicly through the directory. We may display a broader administrative area, but not the postcode district. If customers visit your premises, you may separately provide a full customer address and explicitly confirm that it can be displayed publicly.
 
 Public Listing information
 
-Information you choose to publish in a Listing is publicly available. This can include your business name, descriptions, founder story, business image, broader location, working arrangements, contact name, selected contact details, website, social links, service categories and Plaza Perk.
+Information you choose to publish in a Listing is publicly available. This can include your business name, descriptions, founder story, business image, broader location, a confirmed customer-visit address, working arrangements, contact name, selected contact details, website, social links, service categories and Plaza Perk.
 
 Visitor and directory information
 

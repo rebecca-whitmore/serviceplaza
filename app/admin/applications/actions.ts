@@ -52,6 +52,7 @@ export async function editPendingApplication(formData: FormData) {
   const reason = value("reason");
   const inPersonMode = value("inPersonMode"); const travelRadiusMiles = Number(value("travelRadiusMiles") || 30);
   const businessPostcode = value("businessPostcode"); const inPersonNationwide = checked("inPersonNationwide");
+  const publicVisitAddress = value("publicVisitAddress"); const publicVisitAddressConfirmed = checked("publicVisitAddressConfirmed");
   const payload = {
     businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"), founderStory: value("founderStory"),
     publicContactName: value("publicContactName"), publicEmail: value("publicEmail"), showPublicEmail: checked("showPublicEmail"),
@@ -64,6 +65,7 @@ export async function editPendingApplication(formData: FormData) {
   const geocodedPostcode = await lookupUkPostcode(businessPostcode); payload.isUkBased = Boolean(geocodedPostcode);
   if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !reason || !geocodedPostcode
     || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && (!["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
+    || (payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) && (!publicVisitAddress || !publicVisitAddressConfirmed))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/applications/${versionId}/edit?error=incomplete`);
   if (services.length > 15 || services.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/applications/${versionId}/edit?error=limits`);
@@ -75,6 +77,8 @@ export async function editPendingApplication(formData: FormData) {
     base_town_city: geocodedPostcode?.publicArea ?? null, uk_region: geocodedPostcode?.publicRegion ?? null,
     in_person_mode: payload.offersInPerson ? inPersonMode : null, travel_radius_miles: payload.offersInPerson && inPersonMode !== "customers_visit" ? travelRadiusMiles : null,
     in_person_nationwide: payload.offersInPerson && inPersonMode !== "customers_visit" && inPersonNationwide,
+    public_visit_address: payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) ? publicVisitAddress : null,
+    public_visit_address_confirmed: payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) && publicVisitAddressConfirmed,
   }).eq("id", versionId).eq("status", "pending");
   if (founderError) redirect(`/admin/applications/${versionId}/edit?error=save`);
   revalidatePath("/admin"); revalidatePath(`/admin/applications/${versionId}`);

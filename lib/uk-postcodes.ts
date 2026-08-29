@@ -23,11 +23,12 @@ export async function lookupUkPostcode(value: string): Promise<UkPostcode | null
     const payload = await response.json() as { result?: { postcode?: string; outcode?: string; latitude?: number; longitude?: number; admin_district?: string | null; region?: string | null; country?: string | null } };
     const result = payload.result;
     if (!result || typeof result.latitude !== "number" || typeof result.longitude !== "number" || !result.outcode) return null;
-    const publicRegion = result.admin_district || result.region || result.country || "United Kingdom";
+    const publicArea = result.admin_district || result.region || result.country || "United Kingdom";
+    const publicRegion = result.region && result.region !== publicArea ? result.region : "";
     return {
       postcode: normalisePostcode(result.postcode || postcode), outcode: result.outcode,
       latitude: result.latitude, longitude: result.longitude,
-      publicArea: `${result.outcode} area`, publicRegion,
+      publicArea, publicRegion,
     };
   } catch { return null; }
 }

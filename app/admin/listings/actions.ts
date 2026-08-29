@@ -105,6 +105,7 @@ export async function publishListingEdit(formData: FormData) {
   const imageCandidate = formData.get("image"); const imageFile = imageCandidate instanceof File && imageCandidate.size ? imageCandidate : null;
   const inPersonMode = value("inPersonMode"); const travelRadiusMiles = Number(value("travelRadiusMiles") || 30);
   const businessPostcode = value("businessPostcode"); const inPersonNationwide = checked("inPersonNationwide");
+  const publicVisitAddress = value("publicVisitAddress"); const publicVisitAddressConfirmed = checked("publicVisitAddressConfirmed");
   const removeImage = checked("removeImage"); const imageAltText = value("imageAltText");
   const payload = {
     businessName: value("businessName"), shortSummary: value("shortSummary"), fullDescription: value("fullDescription"), founderStory: value("founderStory"),
@@ -121,6 +122,7 @@ export async function publishListingEdit(formData: FormData) {
   if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !primaryCategoryId || !reason || !geocodedPostcode
     || (!payload.offersOnline && !payload.offersInPerson)
     || (payload.offersInPerson && (!["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
+    || (payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) && (!publicVisitAddress || !publicVisitAddressConfirmed))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
@@ -141,6 +143,8 @@ export async function publishListingEdit(formData: FormData) {
     base_town_city: geocodedPostcode?.publicArea ?? null, uk_region: geocodedPostcode?.publicRegion ?? null,
     in_person_mode: payload.offersInPerson ? inPersonMode : null, travel_radius_miles: payload.offersInPerson && inPersonMode !== "customers_visit" ? travelRadiusMiles : null,
     in_person_nationwide: payload.offersInPerson && inPersonMode !== "customers_visit" && inPersonNationwide,
+    public_visit_address: payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) ? publicVisitAddress : null,
+    public_visit_address_confirmed: payload.offersInPerson && ["customers_visit","both"].includes(inPersonMode) && publicVisitAddressConfirmed,
   }).eq("id", newVersionId);
   if (imageFile && privatePath && publicPath) {
     const { error: imageError } = await supabase.rpc("admin_update_published_listing_image", { target_listing_id: listingId, new_private_storage_path: privatePath, new_public_storage_path: publicPath, filename: imageFile.name, file_mime_type: imageFile.type, file_byte_size: imageFile.size, image_alt_text: imageAltText });
