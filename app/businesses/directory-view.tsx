@@ -13,7 +13,8 @@ function BusinessCard({ listing }: { listing: DirectoryListing }) {
   const location = [listing.base_town_city, listing.uk_region].filter(Boolean).join(", ");
   const matchText = listing.locationMatch === "travels_nationwide" ? "Travels nationwide"
     : listing.locationMatch === "travels_to_you" ? `Travels to your area · ${listing.distanceMiles} miles away`
-    : listing.locationMatch === "you_visit_them" ? `${listing.distanceMiles} miles from you` : null;
+    : listing.locationMatch === "you_visit_them" ? `${listing.distanceMiles} miles from you`
+    : listing.locationMatch === "online_near_you" ? `Online business based ${listing.distanceMiles} miles from you` : null;
   return <article className={styles.card}>
     <Link className={styles.cardImage} href={`/business/${listing.slug}`}>
       {listing.imageUrl ? <img src={listing.imageUrl} alt={`${listing.business_name} business image`}/> : <span className={styles.placeholder}><strong>SP</strong><small>Service Plaza</small></span>}

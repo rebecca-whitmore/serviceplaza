@@ -131,21 +131,20 @@ export async function saveAboutBusiness(input: AboutBusiness, requireComplete = 
 
 export async function saveHowYouWork(input: HowYouWork, requireComplete = false): Promise<SaveResult> {
   if (!/^[0-9a-f-]{36}$/i.test(input.versionId)) return { ok: false, message: "This draft could not be identified." };
-  if (requireComplete && !input.isUkBased) return { ok: false, message: "Confirm that this business is based in the UK before continuing." };
   if (requireComplete && !input.offersOnline && !input.offersInPerson) return { ok: false, message: "Choose at least one way that you work with customers." };
   if (requireComplete && input.offersInPerson && !input.inPersonMode) return { ok: false, message: "Choose whether you travel to customers, customers visit you, or both." };
   if (input.offersInPerson && !isCoverageMiles(Number(input.travelRadiusMiles))) return { ok: false, message: "Choose a valid travel distance." };
-  const postcode = input.offersInPerson && input.businessPostcode.trim() ? await lookupUkPostcode(input.businessPostcode) : null;
-  if (requireComplete && input.offersInPerson && !postcode) return { ok: false, message: "Enter a complete, valid UK postcode. It will be kept private." };
+  const postcode = input.businessPostcode.trim() ? await lookupUkPostcode(input.businessPostcode) : null;
+  if (requireComplete && !postcode) return { ok: false, message: "Enter a complete, valid UK business base postcode. It will be kept private." };
   const supabase = await createClient();
   const { data: auth, error: authError } = await supabase.auth.getClaims();
   if (authError || !auth?.claims?.sub) return { ok: false, message: "Your session has expired. Please sign in again." };
   const { data, error } = await supabase.from("listing_versions").update({
-    is_uk_based: input.isUkBased, show_base_location: input.offersInPerson,
+    is_uk_based: Boolean(postcode), show_base_location: Boolean(postcode),
     offers_online: input.offersOnline, offers_in_person: input.offersInPerson,
     serves_local: input.offersInPerson, serves_uk_wide: input.offersOnline || input.inPersonNationwide,
     base_town_city: postcode?.publicArea ?? null, uk_region: postcode?.publicRegion ?? null,
-    business_postcode: postcode?.postcode ?? (input.offersInPerson ? input.businessPostcode.trim().toUpperCase() || null : null), postcode_latitude: postcode?.latitude ?? null,
+    business_postcode: postcode?.postcode ?? (input.businessPostcode.trim().toUpperCase() || null), postcode_latitude: postcode?.latitude ?? null,
     postcode_longitude: postcode?.longitude ?? null, in_person_mode: input.offersInPerson ? input.inPersonMode : null,
     travel_radius_miles: input.offersInPerson && input.inPersonMode !== "customers_visit" ? Number(input.travelRadiusMiles) : null,
     in_person_nationwide: input.offersInPerson && input.inPersonMode !== "customers_visit" && input.inPersonNationwide,

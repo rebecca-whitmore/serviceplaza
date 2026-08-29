@@ -61,9 +61,9 @@ export async function editPendingApplication(formData: FormData) {
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
-  const geocodedPostcode = payload.offersInPerson ? await lookupUkPostcode(businessPostcode) : null;
-  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !reason || !payload.isUkBased
-    || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && (!geocodedPostcode || !["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
+  const geocodedPostcode = await lookupUkPostcode(businessPostcode); payload.isUkBased = Boolean(geocodedPostcode);
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !reason || !geocodedPostcode
+    || (!payload.offersOnline && !payload.offersInPerson) || (payload.offersInPerson && (!["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/applications/${versionId}/edit?error=incomplete`);
   if (services.length > 15 || services.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/applications/${versionId}/edit?error=limits`);

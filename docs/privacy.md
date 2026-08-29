@@ -18,7 +18,7 @@ If you create or manage a business Listing, we may collect your name, email addr
 
 Location information
 
-If you offer in-person services, we collect the business or service-base postcode you provide, your in-person working arrangement, travel radius and whether you travel nationwide. We convert the postcode into geographic coordinates and a broader public area so that we can match your Listing with visitors searching near a postcode.
+If you apply for a Listing, we collect the business-base postcode you provide so that we can verify the business is UK-based and help visitors discover businesses based near them, including online-only businesses. If you offer in-person services, we also collect your in-person working arrangement, travel radius or nationwide travel selection. We convert the postcode into geographic coordinates and a broader public area for location matching.
 
 The full business postcode and its precise coordinates are treated as private matching information. We do not display them publicly through the directory. We may display a broader area, such as the outward postcode area and local authority area.
 

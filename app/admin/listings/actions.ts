@@ -116,11 +116,11 @@ export async function publishListingEdit(formData: FormData) {
     baseTownCity: value("baseTownCity"), ukRegion: value("ukRegion"), hasPlazaPerk: checked("hasPlazaPerk"),
     perkTitle: value("perkTitle"), perkDescription: value("perkDescription"), perkRedemption: value("perkRedemption"), perkConditions: value("perkConditions"), perkExpiresOn: value("perkExpiresOn"),
   };
-  const isUkBased = checked("isUkBased"); const showBaseLocation = payload.offersInPerson && Boolean(payload.baseTownCity || payload.ukRegion);
-  const geocodedPostcode = payload.offersInPerson ? await lookupUkPostcode(businessPostcode) : null;
-  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !primaryCategoryId || !reason || !isUkBased
+  const geocodedPostcode = await lookupUkPostcode(businessPostcode);
+  const isUkBased = Boolean(geocodedPostcode); const showBaseLocation = Boolean(geocodedPostcode);
+  if (!payload.businessName || !payload.shortSummary || payload.fullDescription.length < 100 || payload.founderStory.length > 2000 || !payload.publicContactName || !primaryCategoryId || !reason || !geocodedPostcode
     || (!payload.offersOnline && !payload.offersInPerson)
-    || (payload.offersInPerson && (!geocodedPostcode || !["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
+    || (payload.offersInPerson && (!["travels_to_customer","customers_visit","both"].includes(inPersonMode) || !isCoverageMiles(travelRadiusMiles)))
     || (payload.showPublicEmail && !payload.publicEmail) || (payload.showPublicPhone && !payload.publicPhone)
     || (payload.hasPlazaPerk && (!payload.perkTitle || !payload.perkDescription || !payload.perkRedemption))) redirect(`/admin/listings/${listingId}/edit?error=incomplete`);
   if (additionalCategoryIds.length > 2 || serviceTagIds.length > 8 || customServices.length > 15 || customServices.some((service) => service.length > 80) || reason.length > 2000) redirect(`/admin/listings/${listingId}/edit?error=limits`);
