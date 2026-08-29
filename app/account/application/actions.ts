@@ -145,7 +145,7 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
     serves_local: input.offersInPerson, serves_uk_wide: input.offersOnline || input.inPersonNationwide,
     base_town_city: postcode?.publicArea ?? null, uk_region: postcode?.publicRegion ?? null,
     business_postcode: postcode?.postcode ?? (input.businessPostcode.trim().toUpperCase() || null), postcode_latitude: postcode?.latitude ?? null,
-    postcode_longitude: postcode?.longitude ?? null, in_person_mode: input.offersInPerson ? input.inPersonMode : null,
+    postcode_longitude: postcode?.longitude ?? null, in_person_mode: input.offersInPerson ? input.inPersonMode || null : null,
     travel_radius_miles: input.offersInPerson && input.inPersonMode !== "customers_visit" ? Number(input.travelRadiusMiles) : null,
     in_person_nationwide: input.offersInPerson && input.inPersonMode !== "customers_visit" && input.inPersonNationwide,
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
