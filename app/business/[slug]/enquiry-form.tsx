@@ -40,6 +40,5 @@ export function EnquiryForm({ slug, businessName }: { slug: string; businessName
     <label className={styles.honeypot} aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
     {status === "error" ? <p className={styles.enquiryError} role="alert">{message}</p> : null}
     <button className={styles.enquirySubmit} type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send enquiry"}</button>
-    <small className={styles.enquiryNote}>Your enquiry goes to {businessName}. Service Plaza stores a record securely but does not manage the business’s response.</small>
   </form>;
 }
