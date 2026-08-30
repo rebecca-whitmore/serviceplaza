@@ -9,7 +9,7 @@ import styles from "../application.module.css";
 export function SubmitPanel({ versionId, ready }: { versionId: string; ready: boolean }) {
   const router = useRouter(); const [accepted, setAccepted] = useState(false); const [submitting, setSubmitting] = useState(false); const [error, setError] = useState("");
   async function submit() {
-    if (!ready || !accepted || !window.confirm("Submit your application for review? You won’t be able to edit this draft while it is awaiting a decision.")) return;
+    if (!ready || !accepted || !window.confirm("Submit your application for review?")) return;
     setSubmitting(true); setError(""); const result = await submitApplication(versionId, accepted);
     if (!result.ok) { setError(result.message); setSubmitting(false); return; }
     router.push("/account"); router.refresh();
