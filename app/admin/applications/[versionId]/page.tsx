@@ -23,7 +23,7 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
     supabase.from("service_tags").select("id, name"),
     supabase.from("listing_services").select("name").eq("listing_version_id", version.id).order("sort_order"),
     supabase.from("listing_images").select("private_storage_path, original_filename, display_publicly, alt_text, width, height, byte_size").eq("listing_version_id", version.id).maybeSingle(),
-    listingVersionIds.length ? supabase.from("review_events").select("listing_version_id, event_type, applicant_message, private_admin_note, created_at").in("listing_version_id", listingVersionIds).order("created_at", { ascending: false }) : Promise.resolve({ data: [] }),
+    listingVersionIds.length ? supabase.rpc("get_admin_review_events", { target_listing_version_ids: listingVersionIds }) : Promise.resolve({ data: [] }),
   ]);
   const categoryName = (id?: string) => categories?.find((category) => category.id === id)?.name;
   const primary = assignments?.find((item) => item.is_primary); const additional = assignments?.filter((item) => !item.is_primary).map((item) => categoryName(item.category_id)).filter(Boolean).join(", ");

@@ -709,6 +709,7 @@ export type Database = {
       }
     }
     Functions: {
+      get_admin_review_events: { Args: { target_listing_version_ids: string[] }; Returns: { applicant_message: string | null; created_at: string; event_type: string; listing_version_id: string; private_admin_note: string | null }[] }
       search_published_listings_by_postcode: { Args: { search_latitude: number; search_longitude: number; visitor_radius_miles?: number }; Returns: { version_id: string; distance_miles: number; match_kind: string }[] }
       admin_release_owner_draft: { Args: { administrator_reason: string; target_listing_id: string }; Returns: string }
       admin_remove_published_listing_image: { Args: { target_listing_id: string }; Returns: Json }
