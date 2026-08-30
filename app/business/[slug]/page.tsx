@@ -43,7 +43,7 @@ export default async function PublicListingPage({ params, searchParams }: { para
     : listing.in_person_mode === "both" ? listing.in_person_nationwide ? "Customers can visit, and the business travels nationwide" : `Customers can visit, and the business travels within ${listing.travel_radius_miles ?? 30} miles`
     : null;
 
-  return <div className={styles.page}><header className={styles.siteHeader}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav aria-label="Public navigation"><Link href="/">Home</Link></nav></header>
+  return <div className={styles.page}><header className={styles.siteHeader}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav aria-label="Public navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
     <main><div className={styles.breadcrumb}><Link href="/">Service Plaza</Link><span aria-hidden="true">/</span><span>{primaryCategory?.name ?? "UK businesses"}</span></div>
       {query.website === "unavailable" ? <p className={styles.linkError}>This business’s website is not available right now. Please try another contact option.</p> : null}
       {query.contact === "unavailable" ? <p className={styles.linkError}>That contact option is not available right now. Please send an enquiry instead.</p> : null}
