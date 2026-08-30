@@ -43,3 +43,5 @@
 @media(max-width:38rem){.main{padding:1.5rem .8rem 5rem}.accountBar{margin:0 0 1.5rem;padding:0}}
 
 .accountBar .backLink{border:0;background:transparent;box-shadow:none}
+.locationBox:has(> .field:only-child){grid-template-columns:1fr}
+.postcodeNote{margin:0;color:var(--ui-muted);font-size:.9rem;line-height:1.65}.postcodeNote strong{color:var(--ui-ink);font-weight:600}

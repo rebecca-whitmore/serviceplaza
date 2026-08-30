@@ -21,7 +21,7 @@ export type HowYouWork = {
   offersOnline: boolean; offersInPerson: boolean; servesLocal: boolean; servesUkWide: boolean;
   baseTownCity: string; ukRegion: string; businessPostcode: string;
   inPersonMode: "travels_to_customer" | "customers_visit" | "both" | "";
-  travelRadiusMiles: number; inPersonNationwide: boolean; publicVisitAddress: string; publicVisitAddressConfirmed: boolean;
+  travelRadiusMiles: number; inPersonNationwide: boolean; publicVisitAddress: string;
 };
 export type StandOutDetails = {
   versionId: string; displayImagePublicly: boolean; imageAltText: string; hasPlazaPerk: boolean;
@@ -135,7 +135,7 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
   if (requireComplete && input.offersInPerson && !input.inPersonMode) return { ok: false, message: "Choose whether you travel to customers, customers visit you, or both." };
   const customersVisit = input.offersInPerson && ["customers_visit", "both"].includes(input.inPersonMode);
   if (input.publicVisitAddress.length > 500) return { ok: false, message: "Enter the public customer address using no more than 500 characters." };
-  if (requireComplete && customersVisit && (!input.publicVisitAddress.trim() || !input.publicVisitAddressConfirmed)) return { ok: false, message: "Add the full customer address and confirm that it may be displayed publicly." };
+  if (requireComplete && customersVisit && !input.publicVisitAddress.trim()) return { ok: false, message: "Add the full public address that customers should visit." };
   if (input.offersInPerson && !isCoverageMiles(Number(input.travelRadiusMiles))) return { ok: false, message: "Choose a valid travel distance." };
   const postcode = input.businessPostcode.trim() ? await lookupUkPostcode(input.businessPostcode) : null;
   if (requireComplete && !postcode) return { ok: false, message: "Enter a complete, valid UK business base postcode. It will be kept private." };
@@ -152,7 +152,7 @@ export async function saveHowYouWork(input: HowYouWork, requireComplete = false)
     travel_radius_miles: input.offersInPerson && input.inPersonMode !== "customers_visit" ? Number(input.travelRadiusMiles) : null,
     in_person_nationwide: input.offersInPerson && input.inPersonMode !== "customers_visit" && input.inPersonNationwide,
     public_visit_address: customersVisit ? input.publicVisitAddress.trim() || null : null,
-    public_visit_address_confirmed: customersVisit && input.publicVisitAddressConfirmed,
+    public_visit_address_confirmed: customersVisit && Boolean(input.publicVisitAddress.trim()),
   }).eq("id", input.versionId).eq("status", "draft").select("id").maybeSingle();
   if (error || !data) return { ok: false, message: "We couldn’t save how and where you work. Please try again." };
   return { ok: true };
