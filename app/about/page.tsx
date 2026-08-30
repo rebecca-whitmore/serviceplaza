@@ -19,7 +19,7 @@ export default function AboutPage() {
   return <div className={styles.page} id="top">
     <header className={styles.header}>
       <Link className={styles.brand} href="/"><span><i>SP</i></span><strong>Service Plaza</strong></Link>
-      <nav aria-label="Main navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link className={styles.ownerLink} href="/login">List your business</Link></nav>
+      <nav aria-label="Main navigation"><Link href="/">Home</Link><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link className={styles.ownerLink} href="/login">List your business</Link></nav>
     </header>
 
     <main>

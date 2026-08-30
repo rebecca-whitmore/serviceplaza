@@ -4,7 +4,7 @@ import styles from "./not-found.module.css";
 
 export default function NotFound() {
   return <main className={styles.page}>
-    <header className={styles.header}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav aria-label="Main navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
+    <header className={styles.header}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav aria-label="Main navigation"><Link href="/">Home</Link><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
     <section className={styles.content}>
       <div className={styles.copy}>
         <p className={styles.eyebrow}>Page not found · 404</p>

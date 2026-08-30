@@ -18,7 +18,7 @@ const steps = [
 
 export default function FindAServicePage() {
   return <div className={styles.page}>
-    <header className={styles.siteHeader}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav><Link href="/businesses">Browse businesses</Link><Link className={styles.active} href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
+    <header className={styles.siteHeader}><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><nav><Link href="/">Home</Link><Link href="/businesses">Browse businesses</Link><Link className={styles.active} href="/find-a-service">Find a service</Link><Link href="/login">List your business</Link></nav></header>
     <main>
       <div className={styles.breadcrumb}><Link href="/">Service Plaza</Link><span>/</span><span>Find a service</span></div>
       <section className={styles.hero}>
