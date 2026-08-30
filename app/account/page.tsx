@@ -33,12 +33,14 @@ export default async function AccountPage({
     : { data: null };
 
   let activeVersion: { id: string; status: string } | null = null;
+  let activeUpdate: { id: string; status: string } | null = null;
+  let publishedListing: { slug: string; isVisible: boolean } | null = null;
   let outcome: { event_type: string | null; applicant_message: string | null } | null = null;
 
   if (business) {
     const { data: listing } = await supabase
       .from("listings")
-      .select("id, current_published_version_id")
+      .select("id, current_published_version_id, slug, publication_status")
       .eq("business_id", business.id)
       .maybeSingle();
 
@@ -52,14 +54,19 @@ export default async function AccountPage({
         .limit(1)
         .maybeSingle();
       if (version) {
+        activeUpdate = version;
         activeVersion = version;
-      } else if (listing.current_published_version_id) {
+      }
+      if (listing.current_published_version_id) {
         const { data: publishedVersion } = await supabase
           .from("listing_versions")
           .select("id, status")
           .eq("id", listing.current_published_version_id)
           .maybeSingle();
-        activeVersion = publishedVersion;
+        if (publishedVersion?.status === "approved") {
+          publishedListing = { slug: listing.slug, isVisible: listing.publication_status === "published" };
+          if (!activeVersion) activeVersion = publishedVersion;
+        }
       }
       const outcomeVersion = activeVersion;
       if (outcomeVersion?.status === "approved" || outcomeVersion?.status === "declined") {
@@ -85,21 +92,33 @@ export default async function AccountPage({
           {email ? `Signed in as ${email}.` : "Your secure session is active."}
         </p>
         <p className={styles.note}>
-          {activeVersion?.status === "pending"
-            ? "Your application is awaiting review."
-            : activeVersion?.status === "approved"
-              ? "Your application has been approved."
-              : activeVersion?.status === "declined"
-                ? "Your application review is complete."
-                : "Create or continue your Service Plaza business listing."}
+          {publishedListing && activeUpdate?.status === "draft"
+            ? "Your listing is live. You also have unpublished changes in progress."
+            : publishedListing && activeUpdate?.status === "changes_requested"
+              ? "Your listing is live. We have requested changes to your latest update."
+              : publishedListing && activeUpdate?.status === "pending"
+                ? "Your listing remains live while your changes are reviewed."
+                : publishedListing
+                  ? "Your listing is live on Service Plaza."
+                  : activeVersion?.status === "pending"
+                    ? "Your application is awaiting review."
+                    : activeVersion?.status === "approved"
+                      ? "Your application has been approved."
+                      : activeVersion?.status === "declined"
+                        ? "Your application review is complete."
+                        : "Create or continue your Service Plaza business listing."}
         </p>
         {outcome ? <aside className={`${styles.outcome} ${outcome.event_type === "approved" ? styles.outcomeApproved : styles.outcomeDeclined}`}><strong>{outcome.event_type === "approved" ? "Application approved" : "Application not approved"}</strong>{outcome.applicant_message ? <p>{outcome.applicant_message}</p> : null}</aside> : null}
-        {activeVersion?.status === "approved" ? <form action={startListingEdit}><button className={styles.primaryButton} type="submit">Edit your listing</button></form> : null}
+        {publishedListing ? <div className={styles.accountActions}>
+          {activeUpdate?.status === "draft" || activeUpdate?.status === "changes_requested" ? <Link className={styles.primaryLink} href="/account/application/basic-information">{activeUpdate.status === "changes_requested" ? "Update requested changes" : "Continue editing"}</Link> : null}
+          {publishedListing.isVisible ? <Link className={activeUpdate?.status === "draft" || activeUpdate?.status === "changes_requested" ? styles.secondaryLink : styles.primaryLink} href={`/business/${publishedListing.slug}`}>View your listing</Link> : null}
+          {!activeUpdate ? <form action={startListingEdit}><button className={styles.secondaryActionButton} type="submit">Edit your listing</button></form> : null}
+        </div> : null}
         {params.notice === "admin_required" ? <p className={styles.error}>That area is restricted to Service Plaza administrators.</p> : null}
         {params.error === "start_listing_edit" ? <p className={styles.error}>We couldn’t prepare your listing for editing. Your published listing has not been changed.</p> : null}
         {profile?.role === "admin" ? <Link className={styles.primaryLink} href="/admin">Open administrator review queue</Link> : null}
-        {activeVersion?.status === "draft" ||
-        activeVersion?.status === "changes_requested" ? (
+        {!publishedListing && (activeVersion?.status === "draft" ||
+        activeVersion?.status === "changes_requested") ? (
           <Link className={styles.primaryLink} href="/account/application/basic-information">
             {activeVersion.status === "changes_requested"
               ? "Update requested changes"
