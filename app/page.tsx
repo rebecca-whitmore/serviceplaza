@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicFooter } from "@/app/components/public-footer";
 import styles from "./home.module.css";
 
 export const metadata: Metadata = {
@@ -42,7 +43,7 @@ export default function HomePage() {
       <section className={styles.directoryCta}><div><p className={styles.eyebrow}>Ready to explore?</p><h2>Your next trusted specialist could be one click away.</h2></div><div className={styles.directoryActions}><Link className={styles.lightAction} href="/businesses">Find a business <span aria-hidden="true">→</span></Link><div className={styles.findServiceNote}><p>Can’t see what you need?</p><Link href="/find-a-service">Ask us to help you find it <span aria-hidden="true">→</span></Link></div></div></section>
       <section className={styles.ownerCta}><div><p className={styles.eyebrow}>For business owners</p><h2>Would your business feel at home here?</h2><p>Create a <strong>FREE</strong> business account and tell us about the services you offer. Every submission is reviewed before it joins the directory.</p></div><Link href="/login">Register or manage your listing</Link></section>
     </main>
-    <footer className={styles.footer}><Link className={styles.brand} href="/"><span><i>SP</i></span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><div><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></div></footer>
+    <PublicFooter />
     <a className={styles.scrollTop} href="#top" aria-label="Back to the top of the page"><span aria-hidden="true">↑</span></a>
   </div>;
 }

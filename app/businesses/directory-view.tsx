@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PublicFooter } from "@/app/components/public-footer";
 import { loadPostcodeMatches, loadPublicDirectory, type DirectoryListing } from "@/lib/public-directory";
 import { COVERAGE_MILES, isCoverageMiles, lookupUkPostcode } from "@/lib/uk-postcodes";
 import styles from "./directory.module.css";
@@ -70,6 +71,6 @@ export async function DirectoryView({ query, categorySlug }: { query: Query; cat
       </div>
       <section className={styles.findServiceCta}><div><p className={styles.eyebrow}>Can’t find quite what you need?</p><h2>Let Service Plaza help with the search.</h2><p>Tell us what you are looking for and our team will look for suitable independent UK professionals. It is completely free, and we aim to respond within 24 hours.</p></div><Link href="/find-a-service">Find a service <span aria-hidden="true">→</span></Link></section>
     </main>
-    <footer><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><nav className={styles.footerLinks} aria-label="Footer navigation"><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a><Link href="/login">Business account</Link></nav></footer>
+    <PublicFooter />
   </div>;
 }

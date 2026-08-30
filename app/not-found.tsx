@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PublicFooter } from "@/app/components/public-footer";
 import styles from "./not-found.module.css";
 
 export default function NotFound() {
@@ -13,6 +14,6 @@ export default function NotFound() {
       </div>
       <div className={styles.art} aria-hidden="true"><div className={styles.orbit}/><div className={styles.diamond}><span>404</span><small>Service Plaza</small></div><i/><i/><i/></div>
     </section>
-    <footer><p>Independent professionals. Meaningful work. UK-wide locations.</p><Link href="/find-a-service">Ask us to help you find a service</Link></footer>
+    <PublicFooter />
   </main>;
 }

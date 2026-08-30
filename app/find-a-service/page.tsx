@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PublicFooter } from "@/app/components/public-footer";
 import { ServiceRequestForm } from "./request-form";
 import styles from "./find-a-service.module.css";
 
@@ -36,6 +37,6 @@ export default function FindAServicePage() {
         <ServiceRequestForm />
       </section>
     </main>
-    <footer><Link className={styles.brand} href="/"><span>SP</span><strong>Service Plaza</strong></Link><p>Independent UK-based service businesses, brought together.</p><nav aria-label="Footer navigation"><Link href="/businesses">Browse businesses</Link><Link href="/find-a-service">Find a service</Link><Link href="/about">About Service Plaza</Link><Link href="/terms-and-conditions">Terms &amp; Conditions</Link><Link href="/cookie-policy">Cookie Policy</Link><Link href="/privacy-policy">Privacy Policy</Link><a href="mailto:admin@serviceplaza.co.uk">admin@serviceplaza.co.uk</a></nav></footer>
+    <PublicFooter />
   </div>;
 }
